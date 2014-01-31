@@ -831,35 +831,8 @@ class TraverseXSD {
 
 
 
-                        //$namespace = $namespace . "\\" . $className;
-                    } /*else {
-                        $className = $node->parentNode->attributes->getNamedItem("name")->value;
-                        //$namespace =
-                    }*/
 
-
-                    /*$class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
-                    $simpleTypeChildren = $node->childNodes;
-                    $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
-
-                    $restrictions = self::getRestrictions($restrictionTag);
-                    $doc = self::restrictionsToDoc($restrictions);
-                    $validationMethods = self::restrictionToValidationMethod($restrictions);
-                    foreach($validationMethods as $key => $validationMethod) {
-                        $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
-                        $class->addMethod(new PHPMethod("function ".$key, new PHPBlock($validationMethod["code"]), array(), $visibility));
                     }
-                    //$toolClass->addMethod(new PHPMethod("__construct", $constructorCode, $constructorParameters, PHPMethod::VISIBILITY_PUBLIC));
-                    $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
-                    $class->addProperty($property);
-                    $class->addMethod($property->factoryGetter());
-                    $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
-
-
-
-                    echo("\n" . $class->asPHP());
-                    self::createFile($namespace, $className, $class);
-                    $namespace = $namespace . "\\" . $className;*/
                 }
 
             }
@@ -937,6 +910,7 @@ class TraverseXSD {
     }
 
     /**
+     * Pega os elements filhos de um indicator (any, sequence, choice), criando a metadata de indicator e retornando os elementos encontrados
      * @param DomNode $indicatorTag
      * @param array $elementsBuffer
      * @return array
