@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d0218ac5-a535-4736-b575-0dc0bd47952b" name="Default" comment="" />
+    <ignored path="XSD2Class.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DatabaseView">
+    <flatten value="false" />
+    <groupTables value="false" />
+    <sortChildren value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="XSD2Class" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="main.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/XsdParser/main.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="627" column="64" selection-start="27167" selection-end="27176" vertical-scroll-proportion="-2.631783" vertical-offset="11881" max-vertical-offset="16949">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="teste.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ClassGenerator/teste.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="31" selection-start="1330" selection-end="1330" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="782">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="xmldsig-core-schema_v1.01.xsd" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XsdParser/xmldsig-core-schema_v1.01.xsd">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="38" selection-start="1763" selection-end="1790" vertical-scroll-proportion="-2.04" vertical-offset="629" max-vertical-offset="1751">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tiposBasico_v3.10.xsd" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XsdParser/tiposBasico_v3.10.xsd">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="366" column="16" selection-start="13705" selection-end="13708" vertical-scroll-proportion="0.0" vertical-offset="6018" max-vertical-offset="14144">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="leiauteNFe_v3.10.xsd" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/XsdParser/leiauteNFe_v3.10.xsd">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4821" column="35" selection-start="217844" selection-end="217844" vertical-scroll-proportion="-17.04" vertical-offset="84" max-vertical-offset="41225">
+              <folding>
+                <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#1;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#3;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#4;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#5;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#6;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#7;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#10;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#11;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#12;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#13;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+                <element signature="tag#xs:element#14;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="false" />
+    </FindUsagesManager>
+  </component>
+  <component name="FrameworkCommandLineHistory">
+    <commandsHistory>
+      <command text="ls" />
+      <command text="dr" />
+      <command text="dir" />
+      <command text="exit" />
+    </commandsHistory>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/XsdParser/TIPOSBASICOV310/TChNFe.php" />
+        <option value="$PROJECT_DIR$/XsdParser/XMLDSIGCORESCHEMAV101/ReferenceType/PREFIXURI.php" />
+        <option value="$PROJECT_DIR$/XsdParser/LEIAUTENFEV310/TNFe/InfNFe/Ide/CNF/PREFIXcNF.php" />
+        <option value="$PROJECT_DIR$/Util/XMLException.php" />
+        <option value="$PROJECT_DIR$/Util/XML.php" />
+        <option value="$PROJECT_DIR$/ClassGenerator/Type/Primary.php" />
+        <option value="$PROJECT_DIR$/ClassGenerator/PHPType.php" />
+        <option value="$PROJECT_DIR$/ClassGenerator/PHPProperty.php" />
+        <option value="$PROJECT_DIR$/ClassGenerator/Type/Object.php" />
+        <option value="$PROJECT_DIR$/XsdParser/XMLDSIGCORESCHEMAV101/DigestValueType.php" />
+        <option value="$PROJECT_DIR$/ClassGenerator/PHPNamespace.php" />
+        <option value="$PROJECT_DIR$/XsdParser/tiposBasico_v3.10.xsd" />
+        <option value="$PROJECT_DIR$/XsdParser/LEIAUTENFEV310/TNFe/InfNFe/Ide/Ide.php" />
+        <option value="$PROJECT_DIR$/XsdParser/LEIAUTENFEV310/TNFe/InfNFe/Id.php" />
+        <option value="$PROJECT_DIR$/XsdParser/leiauteNFe_v3.10.xsd" />
+        <option value="$PROJECT_DIR$/XsdParser/main.php" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="Zend" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1296" />
+    <option name="height" value="996" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>CSS</id>
+          </State>
+          <State>
+            <id>GeneralPHP</id>
+          </State>
+          <State>
+            <id>HTML</id>
+          </State>
+          <State>
+            <id>Invalid elementsCSS</id>
+          </State>
+          <State>
+            <id>JavaScript</id>
+          </State>
+          <State>
+            <id>PHP</id>
+          </State>
+          <State>
+            <id>PHPDocPHP</id>
+          </State>
+          <State>
+            <id>Probable bugsJavaScript</id>
+          </State>
+          <State>
+            <id>Probably bugPHP</id>
+          </State>
+          <State>
+            <id>SASS/SCSS</id>
+          </State>
+          <State>
+            <id>SQL</id>
+          </State>
+          <State>
+            <id>UndefinedPHP</id>
+          </State>
+          <State>
+            <id>UnusedPHP</id>
+          </State>
+        </expanded-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSDReader" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XsdParser" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="XSD2Class" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="options.splitter.main.proportions" value="0.19416666" />
+    <property name="full.screen.before.presentation.mode" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="options.lastSelected" value="Settings.JavaScript.Linters.ClosureLinter" />
+    <property name="recentsLimit" value="5" />
+    <property name="FullScreen" value="false" />
+    <property name="options.splitter.details.proportions" value="0.32291666" />
+    <property name="options.searchVisible" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\workfolder\XSD2Class\XsdParser\backupfiles" />
+      <recent name="C:\workfolder\XSD2Class\XsdParser" />
+      <recent name="C:\workfolder\XSD2Class\Exemplos\Envio de XML" />
+      <recent name="C:\workfolder\XSD2Class\Exemplos" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\workfolder\XSD2Class\Exemplos\Classes\XML\TiposBasico" />
+      <recent name="C:\workfolder\XSD2Class\Exemplos\Classes\XML\EnviNFe" />
+      <recent name="C:\workfolder\XSD2Class\Exemplos\Classes\XML" />
+      <recent name="C:\workfolder\XSD2Class\Exemplos\Classes\LeiauteNFe" />
+      <recent name="C:\workfolder\XSD2Class\ClassGenerator" />
+    </key>
+  </component>
+  <component name="RunManager" selected="PHP Script.main.php">
+    <configuration default="false" name="main.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/XsdParser/main.php">
+      <RunnerSettings RunnerId="PhpRunner" />
+      <RunnerSettings RunnerId="PhpScriptDebugRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpScriptDebugRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="PREFIXURI.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/XsdParser/XMLDSIGCORESCHEMAV101/ReferenceType/PREFIXURI.php">
+      <RunnerSettings RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="PREFIXcNF.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/XsdParser/LEIAUTENFEV310/TNFe/InfNFe/Ide/CNF/PREFIXcNF.php">
+      <RunnerSettings RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="XML.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/Util/XML.php">
+      <RunnerSettings RunnerId="PhpRunner" />
+      <RunnerSettings RunnerId="PhpScriptDebugRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpScriptDebugRunner" />
+      <method />
+    </configuration>
+    <configuration default="false" name="teste.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/ClassGenerator/teste.php">
+      <RunnerSettings RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
+    <list size="5">
+      <item index="0" class="java.lang.String" itemvalue="PHP Script.main.php" />
+      <item index="1" class="java.lang.String" itemvalue="PHP Script.PREFIXURI.php" />
+      <item index="2" class="java.lang.String" itemvalue="PHP Script.PREFIXcNF.php" />
+      <item index="3" class="java.lang.String" itemvalue="PHP Script.XML.php" />
+      <item index="4" class="java.lang.String" itemvalue="PHP Script.teste.php" />
+    </list>
+    <recent_temporary>
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="PHP Script.main.php" />
+        <item index="1" class="java.lang.String" itemvalue="PHP Script.teste.php" />
+        <item index="2" class="java.lang.String" itemvalue="PHP Script.XML.php" />
+        <item index="3" class="java.lang.String" itemvalue="PHP Script.PREFIXcNF.php" />
+        <item index="4" class="java.lang.String" itemvalue="PHP Script.PREFIXURI.php" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d0218ac5-a535-4736-b575-0dc0bd47952b" name="Default" comment="" />
+      <created>1389192188167</created>
+      <updated>1389192188167</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1296" height="996" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32740214" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2064057" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952815" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24961948" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22609401" sideWeight="0.7188612" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2846975" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2716895" sideWeight="0.5907738" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28113878" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="92" y="92" width="1096" height="796" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15302491" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.5954923" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Command Line Tools Console" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32886904" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32795697" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952815" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33412606" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2716895" sideWeight="0.5907738" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33978495" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24961948" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14262562" sideWeight="0.7312723" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26872772" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.6944114" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Command Line Tools Console" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32886904" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/TIPOSBASICOV310/TCodMunIBGE.php</url>
+          <line>16</line>
+          <option name="timeStamp" value="69" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/TIPOSBASICOV310/Tano.php</url>
+          <line>44</line>
+          <option name="timeStamp" value="72" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/TIPOSBASICOV310/Tano.php</url>
+          <line>21</line>
+          <option name="timeStamp" value="73" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/TIPOSBASICOV310/Tano.php</url>
+          <line>1</line>
+          <option name="timeStamp" value="74" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/com/jetbrains/php/lang/psi/stubs/data/dom_c.php</url>
+          <line>960</line>
+          <option name="timeStamp" value="104" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/main.php</url>
+          <line>988</line>
+          <option name="timeStamp" value="141" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/main.php</url>
+          <line>640</line>
+          <option name="timeStamp" value="148" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/main.php</url>
+          <line>630</line>
+          <option name="timeStamp" value="150" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/XsdParser/main.php</url>
+          <line>690</line>
+          <option name="timeStamp" value="155" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="162" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/XsdParser/tiposBasico_v3.10.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="366" column="16" selection-start="13705" selection-end="13708" vertical-scroll-proportion="0.0" vertical-offset="6069" max-vertical-offset="14144">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XsdParser/leiauteNFe_v3.10.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="275" column="247" selection-start="11526" selection-end="11529" vertical-scroll-proportion="0.0" vertical-offset="4675" max-vertical-offset="122672">
+          <folding>
+            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#1;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#3;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#4;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#5;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#6;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#7;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#10;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#11;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#12;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#13;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#14;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Exemplos/Classes/XML/EnviNFe/Documento.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="3" selection-start="235" selection-end="235" vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="340" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ClassGenerator/PHPValue.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="13" selection-start="115" selection-end="115" vertical-scroll-proportion="-4.576923" vertical-offset="0" max-vertical-offset="459" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ClassGenerator/Type/Primary.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="20" selection-start="132" selection-end="142" vertical-scroll-proportion="-2.3333333" vertical-offset="0" max-vertical-offset="1071">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/result/teste.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="167" column="31" selection-start="6661" selection-end="6674" vertical-scroll-proportion="-113.56" vertical-offset="0" max-vertical-offset="9979" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ClassGenerator/teste.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="31" selection-start="1330" selection-end="1330" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="782">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XsdParser/xmldsig-core-schema_v1.01.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="38" selection-start="1763" selection-end="1790" vertical-scroll-proportion="-2.04" vertical-offset="629" max-vertical-offset="1751">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XsdParser/tiposBasico_v3.10.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="366" column="16" selection-start="13705" selection-end="13708" vertical-scroll-proportion="0.0" vertical-offset="6069" max-vertical-offset="14144">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XsdParser/leiauteNFe_v3.10.xsd">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4821" column="35" selection-start="217844" selection-end="217844" vertical-scroll-proportion="-17.04" vertical-offset="84" max-vertical-offset="41225">
+          <folding>
+            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#1;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#3;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#4;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#5;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#6;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#7;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#10;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#11;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#2;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#12;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#13;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+            <element signature="tag#xs:element#14;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:element#0;tag#xs:sequence#0;tag#xs:complexType#0;tag#xs:schema#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/XsdParser/main.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="627" column="64" selection-start="27167" selection-end="27176" vertical-scroll-proportion="-2.631783" vertical-offset="11881" max-vertical-offset="16949">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
+

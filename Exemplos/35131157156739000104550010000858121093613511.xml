@@ -1,0 +1,502 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<nfeProc versao="2.00" xmlns="http://www.portalfiscal.inf.br/nfe">
+    <NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+        <infNFe versao="2.00" Id="NFe35131157156739000104550010000858121093613511">
+            <ide>
+                <cUF>35</cUF>
+                <cNF>09361351</cNF>
+                <natOp>Venda de mercadoria adquirida ou recebida de terceiros</natOp>
+                <indPag>1</indPag>
+                <mod>55</mod>
+                <serie>1</serie>
+                <nNF>85812</nNF>
+                <dEmi>2013-11-18</dEmi>
+                <tpNF>1</tpNF>
+                <cMunFG>3550308</cMunFG>
+                <tpImp>1</tpImp>
+                <tpEmis>1</tpEmis>
+                <cDV>1</cDV>
+                <tpAmb>1</tpAmb>
+                <finNFe>1</finNFe>
+                <procEmi>0</procEmi>
+                <verProc>WK Radar</verProc>
+            </ide>
+            <emit>
+                <CNPJ>57156739000104</CNPJ>
+                <xNome>HJ SANTA FE COM AGRICOLA LTDA</xNome>
+                <xFant>HJ Santa Fe</xFant>
+                <enderEmit>
+                    <xLgr>AV . DOUTOR GASTAO VIDIGAL</xLgr>
+                    <nro>1946</nro>
+                    <xCpl>CEAGESP PAVILHAO AME BOX 1B</xCpl>
+                    <xBairro>VILA LEOPOLDINA</xBairro>
+                    <cMun>3550308</cMun>
+                    <xMun>Sao Paulo</xMun>
+                    <UF>SP</UF>
+                    <CEP>05314000</CEP>
+                    <cPais>1058</cPais>
+                    <xPais>Brasil</xPais>
+                    <fone>1121059100</fone>
+                </enderEmit>
+                <IE>111714446110</IE>
+                <CRT>3</CRT>
+            </emit>
+            <dest>
+                <CNPJ>67945071054734</CNPJ>
+                <xNome>GRAN SAPORE BR BRASIL S.A.</xNome>
+                <enderDest>
+                    <xLgr>R JAVARI</xLgr>
+                    <nro>229</nro>
+                    <xCpl>GALPAO2 SALA S - 2</xCpl>
+                    <xBairro>TAMBORE</xBairro>
+                    <cMun>3505708</cMun>
+                    <xMun>Barueri</xMun>
+                    <UF>SP</UF>
+                    <CEP>06460035</CEP>
+                    <cPais>1058</cPais>
+                    <xPais>Brasil</xPais>
+                </enderDest>
+                <IE>206293999119</IE>
+                <email>nfe.fornecedores@sapore.com.br; rodrigo.santos@sapore.com.br</email>
+            </dest>
+            <det nItem="1">
+                <prod>
+                    <cProd>9739</cProd>
+                    <cEAN />
+                    <xProd>BATATA BINTJE (F=5) - SC BATATA</xProd>
+                    <NCM>07101000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>407.0000</qCom>
+                    <vUnCom>7.50</vUnCom>
+                    <vProd>3052.50</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>407.0000</qTrib>
+                    <vUnTrib>7.50</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="2">
+                <prod>
+                    <cProd>9774</cProd>
+                    <cEAN />
+                    <xProd>LIMAO TAITI (F=5) - SC</xProd>
+                    <NCM>08055000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>61.0000</qCom>
+                    <vUnCom>5.63</vUnCom>
+                    <vProd>343.43</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>61.0000</qTrib>
+                    <vUnTrib>5.63</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="3">
+                <prod>
+                    <cProd>13623</cProd>
+                    <cEAN />
+                    <xProd>REPOLHO ROXO (F=3) -SC</xProd>
+                    <NCM>07049000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>61.0000</qCom>
+                    <vUnCom>4.65</vUnCom>
+                    <vProd>283.65</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>61.0000</qTrib>
+                    <vUnTrib>4.65</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="4">
+                <prod>
+                    <cProd>9745</cProd>
+                    <cEAN />
+                    <xProd>BATATA BOLINHA 1A (F=5) - SC</xProd>
+                    <NCM>07101000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>76.0000</qCom>
+                    <vUnCom>7.06</vUnCom>
+                    <vProd>536.56</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>76.0000</qTrib>
+                    <vUnTrib>7.06</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="5">
+                <prod>
+                    <cProd>9716</cProd>
+                    <cEAN />
+                    <xProd>PEPINO COMUM 1A (F=5) - SC</xProd>
+                    <NCM>07070000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>250.0000</qCom>
+                    <vUnCom>5.63</vUnCom>
+                    <vProd>1407.50</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>250.0000</qTrib>
+                    <vUnTrib>5.63</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="6">
+                <prod>
+                    <cProd>9828</cProd>
+                    <cEAN />
+                    <xProd>ABACAXI PEROLA (10UNIDS) (F=12) - CX</xProd>
+                    <NCM>08043000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>Cx</uCom>
+                    <qCom>122.0000</qCom>
+                    <vUnCom>20.10</vUnCom>
+                    <vProd>2452.20</vProd>
+                    <cEANTrib />
+                    <uTrib>Cx</uTrib>
+                    <qTrib>122.0000</qTrib>
+                    <vUnTrib>20.10</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="7">
+                <prod>
+                    <cProd>9811</cProd>
+                    <cEAN />
+                    <xProd>MELAO T-10 (F=12) - CX</xProd>
+                    <NCM>08071900</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>Cx</uCom>
+                    <qCom>144.0000</qCom>
+                    <vUnCom>25.20</vUnCom>
+                    <vProd>3628.80</vProd>
+                    <cEANTrib />
+                    <uTrib>Cx</uTrib>
+                    <qTrib>144.0000</qTrib>
+                    <vUnTrib>25.20</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="8">
+                <prod>
+                    <cProd>9797</cProd>
+                    <cEAN />
+                    <xProd>TOMATE SALADA 1A (F=10) - CX</xProd>
+                    <NCM>07020000</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>Cx</uCom>
+                    <qCom>369.0000</qCom>
+                    <vUnCom>19.10</vUnCom>
+                    <vProd>7047.90</vProd>
+                    <cEANTrib />
+                    <uTrib>Cx</uTrib>
+                    <qTrib>369.0000</qTrib>
+                    <vUnTrib>19.10</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="9">
+                <prod>
+                    <cProd>9768</cProd>
+                    <cEAN />
+                    <xProd>CEBOLA NACIONAL (GRAUDA) (F=5) - SC</xProd>
+                    <NCM>07129090</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>539.0000</qCom>
+                    <vUnCom>11.25</vUnCom>
+                    <vProd>6063.75</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>539.0000</qTrib>
+                    <vUnTrib>11.25</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <det nItem="10">
+                <prod>
+                    <cProd>13630</cProd>
+                    <cEAN />
+                    <xProd>ABOBORA PAULISTA 1A (F=5) - SC</xProd>
+                    <NCM>07095900</NCM>
+                    <CFOP>5102</CFOP>
+                    <uCom>SC</uCom>
+                    <qCom>72.0000</qCom>
+                    <vUnCom>5.25</vUnCom>
+                    <vProd>378.00</vProd>
+                    <cEANTrib />
+                    <uTrib>SC</uTrib>
+                    <qTrib>72.0000</qTrib>
+                    <vUnTrib>5.25</vUnTrib>
+                    <indTot>1</indTot>
+                </prod>
+                <imposto>
+                    <vTotTrib>0.00</vTotTrib>
+                    <ICMS>
+                        <ICMS40>
+                            <orig>0</orig>
+                            <CST>40</CST>
+                        </ICMS40>
+                    </ICMS>
+                    <PIS>
+                        <PISNT>
+                            <CST>07</CST>
+                        </PISNT>
+                    </PIS>
+                    <COFINS>
+                        <COFINSNT>
+                            <CST>07</CST>
+                        </COFINSNT>
+                    </COFINS>
+                </imposto>
+            </det>
+            <total>
+                <ICMSTot>
+                    <vBC>0.00</vBC>
+                    <vICMS>0.00</vICMS>
+                    <vBCST>0.00</vBCST>
+                    <vST>0.00</vST>
+                    <vProd>25194.29</vProd>
+                    <vFrete>0.00</vFrete>
+                    <vSeg>0.00</vSeg>
+                    <vDesc>0.00</vDesc>
+                    <vII>0.00</vII>
+                    <vIPI>0.00</vIPI>
+                    <vPIS>0.00</vPIS>
+                    <vCOFINS>0.00</vCOFINS>
+                    <vOutro>0.00</vOutro>
+                    <vNF>25194.29</vNF>
+                    <vTotTrib>0.00</vTotTrib>
+                </ICMSTot>
+            </total>
+            <transp>
+                <modFrete>0</modFrete>
+                <vol>
+                    <pesoL>14356.000</pesoL>
+                    <pesoB>14356.000</pesoB>
+                </vol>
+            </transp>
+            <cobr>
+                <dup>
+                    <nDup>85812</nDup>
+                    <dVenc>2014-01-20</dVenc>
+                    <vDup>25194.29</vDup>
+                </dup>
+            </cobr>
+            <infAdic>
+                <infCpl>ENTREGA DE TERCA-FEIRA 19/11/2013</infCpl>
+            </infAdic>
+        </infNFe>
+        <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+            <SignedInfo>
+                <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+                <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+                <Reference URI="#NFe35131157156739000104550010000858121093613511">
+                    <Transforms>
+                        <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                        <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+                    </Transforms>
+                    <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                    <DigestValue>qS3W1K7+j8Pf/QVBD/9uLcI3CCU=</DigestValue>
+                </Reference>
+            </SignedInfo>
+            <SignatureValue>HU1PJMHcXgOGKFUcJppMVm0uw/Bq2A/EIupYpgwymPZnmoqTj2ScrUXx3fLSOy/w8jhXj2tnsJC1XiS8wbCcnegOTk3OERnBGTGUKmCIxLWxWbNwVx43OuA8aUwe51GIierodp8H4PFJgMK1TD6p9MBeL097ckWCXNGbCJs0ST7Yzf1WFE5zxwnOvuXGgh4djPCd6KGttHkGoqyj4J2WXVDtUInsgmfEV9glfCYYAUekqh5+aNcmRRJgvuBJvYKsqULDkX72QZbWE4+B/Ba7D+qmMBFPJxcE5GD5fKPSAxZRMelVtst/bw2Af7uQZYEFvqS7mF39LLyWXj7gPAaOmw==</SignatureValue>
+            <KeyInfo>
+                <X509Data>
+                    <X509Certificate>MIIIaTCCBlGgAwIBAgIQYgQVSi979FH8/zdZgKVtmzANBgkqhkiG9w0BAQsFADB0MQswCQYDVQQGEwJCUjETMBEGA1UEChMKSUNQLUJyYXNpbDEtMCsGA1UECxMkQ2VydGlzaWduIENlcnRpZmljYWRvcmEgRGlnaXRhbCBTLkEuMSEwHwYDVQQDExhBQyBDZXJ0aXNpZ24gTXVsdGlwbGEgRzUwHhcNMTMwMjE5MDAwMDAwWhcNMTQwMjE4MjM1OTU5WjCB2jELMAkGA1UEBhMCQlIxEzARBgNVBAoUCklDUC1CcmFzaWwxJTAjBgNVBAsUHEF1dGVudGljYWRvIHBvciBBUiBLYW1pbnNrYXMxGzAZBgNVBAsUEkFzc2luYXR1cmEgVGlwbyBBMTEVMBMGA1UECxQMSUQgLSA0MTk1NzM5MS4wLAYDVQQDEyVISiBTQU5UQSBGRSBDT01FUkNJQUwgRSBBR1JJQ09MQSBMVERBMSswKQYJKoZIhvcNAQkBFhxmYXR1cmFtZW50b0BoanNhbnRhZmUuY29tLmJyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlj50e9qkLv/Q3p8lPlYaFX8Pwc3e1Z5s3tz5Q5vaCFWisglVJEA1RvUmlOzLJpTOchFfAHxkL8B1Rt96Yq7I/mr8buZMCkaOQrzAe2wCsNAKwpaIZx09OtBGITPGjtV65rpMcs7Zw89N1gB4pamMVSDyKI3FhMlu80wxuMF42O5vjRQ4T+oUyri4Ft7UR7Hn2uiIdrdGFaj82OKU6T3D7mUU/nyjCu6UrCi809iYgVgQDyKYexaVw4CIBy4qjyDwSKw1lFgn33KNkr9kZKduAdZSTYiRD31WfRGhFSlasSigPTZ/YRgSnLBnp6fMriufWkTtfTeWZuMUFgGdHrHG6QIDAQABo4IDjjCCA4owgdQGA1UdEQSBzDCByaA9BgVgTAEDBKA0BDIwNTAzMTk2NzE4OTM3NDcwMjY4MDAwMDAwMDAwMDAwMDAwMDAzNzExOTU2MDNTU1BTUKA2BgVgTAEDAqAtBCtDQVNTSUEgQ1JJU1RJTkEgREUgTUVMTyBST0RSSUdVRVMgR1VFUlJFSVJPoBkGBWBMAQMDoBAEDjU3MTU2NzM5MDAwMTA0oBcGBWBMAQMHoA4EDDAwMDAwMDAwMDAwMIEcZmF0dXJhbWVudG9AaGpzYW50YWZlLmNvbS5icjAJBgNVHRMEAjAAMB8GA1UdIwQYMBaAFJ1Qz73/JMqvsTPrF+JCeo5pKo5TMA4GA1UdDwEB/wQEAwIF4DCBiQYDVR0gBIGBMH8wfQYGYEwBAgELMHMwcQYIKwYBBQUHAgEWZWh0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vZHBjL0FDX0NlcnRpc2lnbl9NdWx0aXBsYS9EUENfQUNfQ2VydGlTaWduTXVsdGlwbGEucGRmMIIBJQYDVR0fBIIBHDCCARgwXKBaoFiGVmh0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vbGNyL0FDQ2VydGlzaWduTXVsdGlwbGFHNS9MYXRlc3RDUkwuY3JsMFugWaBXhlVodHRwOi8vaWNwLWJyYXNpbC5vdXRyYWxjci5jb20uYnIvcmVwb3NpdG9yaW8vbGNyL0FDQ2VydGlzaWduTXVsdGlwbGFHNS9MYXRlc3RDUkwuY3JsMFugWaBXhlVodHRwOi8vcmVwb3NpdG9yaW8uaWNwYnJhc2lsLmdvdi5ici9sY3IvQ2VydGlzaWduL0FDQ2VydGlzaWduTXVsdGlwbGFHNS9MYXRlc3RDUkwuY3JsMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCBoAYIKwYBBQUHAQEEgZMwgZAwZAYIKwYBBQUHMAKGWGh0dHA6Ly9pY3AtYnJhc2lsLmNlcnRpc2lnbi5jb20uYnIvcmVwb3NpdG9yaW8vY2VydGlmaWNhZG9zL0FDX0NlcnRpc2lnbl9NdWx0aXBsYV9HNS5wN2MwKAYIKwYBBQUHMAGGHGh0dHA6Ly9vY3NwLmNlcnRpc2lnbi5jb20uYnIwDQYJKoZIhvcNAQELBQADggIBAAuhElZBL52PAgniyRls68zqYgW6D3jcHcx9DVkK+GZTBegr5d2WIgZTuno3DAhGYro1iIz6EvtYSiEfQuJEHZfklF9FQwMKI177obC6eGoadqtL+jEa2Gy5iC/JUuJVQs7VWo0UTyGu+L7GSaww/TKUO0P76t6odfOVbt5QBDqsmEOfXDBidb2pv8Di27s7CkN6IT9rHRUvxwXlXS4jiuAticy9iTtz/KoR9UmAupNXiTHiBF2U0JLZ5UqfJN7WlaObbyvW2fAMWQTkDn3O73h055aGPo9feE3MsTlHCz+wQqMPJiNX4Q4G4LkiG48sClyZ4oRQ57xiL4RWBCU2qUoiW+Nc8lJtVdVKb81MdbuyA7YAI1eZl9ADnwxGn3mTU09NjtpcxKWUAknLJHxrBdxxm4rejAkVgmykRYYIMSZUeoscu3HRYB7Usd2JfxLO2neZpiigICO3rFjkTOmiKJMJ67Q1EuwddSiYzULruPIJQFanQiZ1M7tgQQUKZ9eMSgtPFTsT+xXyLrgaB3xayTl1lmHS1yTObJEZOYSH35lgcLtiZAlYMQ0DQHHnjZi3rsRoPRPToG9oKr5Nqnz3uFUS02JwJIghPgVtWXkT4rRvKGNv37I0jLZkhtcltj2mkiCV+3HJA7uIvy3HHA3rGBPdxVNKnET4vf+p/NirPrzx</X509Certificate>
+                </X509Data>
+            </KeyInfo>
+        </Signature>
+    </NFe>
+    <protNFe versao="2.00">
+        <infProt Id="Id135130705143478">
+            <tpAmb>1</tpAmb>
+            <verAplic>SP_NFE_PL_006q</verAplic>
+            <chNFe>35131157156739000104550010000858121093613511</chNFe>
+            <dhRecbto>2013-11-18T18:17:01</dhRecbto>
+            <nProt>135130705143478</nProt>
+            <digVal>qS3W1K7+j8Pf/QVBD/9uLcI3CCU=</digVal>
+            <cStat>100</cStat>
+            <xMotivo>Autorizado o uso da NF-e</xMotivo>
+        </infProt>
+    </protNFe>
+</nfeProc>
