@@ -8,6 +8,11 @@ class Object implements PHPType{
     protected $className;
     protected $isCollection;
 
+
+    /**
+     * @param $className
+     * @param bool $isCollection
+     */
     public function __construct($className, $isCollection = false) {
         $this->className = $className;
         $this->isCollection = $isCollection;
@@ -54,5 +59,13 @@ class Object implements PHPType{
 
     public function getAdderSign() {
         return $this->getAdder();
+    }
+
+    public function isCollection() {
+        return $this->isCollection;
+    }
+
+    public function factoryTypeWithoutCollection() {
+        return new Object($this->className, false);
     }
 } 

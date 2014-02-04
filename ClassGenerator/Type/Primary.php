@@ -54,5 +54,21 @@ class Primary implements PHPType{
         return $this->type . ($this->isCollection ? "[]" : "");
     }
 
+    public function getMinOccurs() {
+        return $this->minOccurs;
+    }
+
+    public function getMaxOccurs() {
+        return $this->maxOccurs;
+    }
+
+    public function isCollection() {
+        return $this->isCollection;
+    }
+
+    public function factoryTypeWithoutCollection() {
+        return new Primary($this->type, false);
+    }
+
 
 }

@@ -31,7 +31,7 @@ class PHPParameter implements PHPCode{
      * @return string represent PHP code of that entity.
      */
     public function asPHP() {
-        return $this->setterSign() ."$".$this->name.$this->getDefaultCode();
+        return ($this->setterSign() ? $this->setterSign()." " : "") ."$".$this->name.$this->getDefaultCode();
     }
 
 

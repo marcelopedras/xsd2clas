@@ -9,7 +9,11 @@ interface PHPType {
     public function getGetterDoc();
     public function getVarDoc();
 
+    public function isCollection();
+    public function factoryTypeWithoutCollection();
+
     //This last ones are only for collections.
     public function getAdderDoc();
     public function getAdderSign();
+
 } 

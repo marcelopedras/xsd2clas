@@ -56,7 +56,7 @@ $document = new DOMDocument();
 $fileName = "leiauteNFe_v3.10.xsd";
 $document->loadXML(file_get_contents($fileName));
 
-$traverseXSD = new TraverseXSD($document->documentElement, $fileName);
+$traverseXSD = new TraverseXSD($document->documentElement, $fileName, $fileName);
 
 class TraverseXSD {
 
@@ -72,22 +72,75 @@ class TraverseXSD {
     /** @var PHPClass []*/
     protected $importClass = array();
 
+    protected $documents = array();
+
+    protected static $primary_types = array(
+        "ENTITIES",//string type -> http://www.w3schools.com/schema/schema_dtypes_string.asp
+        "ENTITY",
+        "ID",
+        "IDREF",
+        "IDREFS",
+        "language",
+        "Name",
+        "NCName",
+        "NMTOKEN",
+        "NMTOKENS",
+        "normalizedString",
+        "QName",
+        "string",
+        "token",//end string
+
+        "date",//date type -> http://www.w3schools.com/schema/schema_dtypes_date.asp
+        "dateTime",
+        "duration",
+        "gDay",
+        "gMonth",
+        "gMonthDay",
+        "gYear",
+        "gYearMonth",
+        "time", //end date
+
+        "byte",//numeric type -> http://www.w3schools.com/schema/schema_dtypes_numeric.asp
+        "decimal",
+        "int",
+        "integer",
+        "long",
+        "negativeInteger",
+        "nonNegativeInteger",
+        "nonPositiveInteger",
+        "positiveInteger",
+        "short",
+        "unsignedLong",
+        "unsignedInt",
+        "unsignedShort",
+        "unsignedByte",// end numeric
+
+        "anyURI", //miscellaneous type -> http://www.w3schools.com/schema/schema_dtypes_misc.asp
+        "base64Binary",
+        "boolean",
+        "double",
+        "float",
+        "hexBinary",
+        "NOTATION",
+        "QName" // end miscellaneous
+    );
+
     protected $rootNamespace;
 
-    function __construct($schema, $namespace) {
+    function __construct($schema, $namespace, $fileName) {
         $namespace = self::namespacefy($namespace);
         $this->rootNamespace = $namespace;
+        $this->fileName = $fileName;
         $schemaChildren = $schema->childNodes;
 
         $this->schema = $schema;
         $this->imports = self::getNodes($schemaChildren, "import");
 
-
         $this->importClass = $this->traverseImportFiles($schemaChildren);
         $this->includeClass = self::traverseIncludeFiles($schemaChildren);
         $this->traverse($schema, $namespace);
 
-        echo("Finished");
+        echo("\nFinished");
     }
 
     public function getClass() {
@@ -126,7 +179,7 @@ class TraverseXSD {
         if(!$namespace) {
             $namespace = self::namespacefy($fileName);
         }
-        $traverseObj = new TraverseXSD($domDocument->documentElement, $namespace);
+        $traverseObj = new TraverseXSD($domDocument->documentElement, $namespace, $fileName);
         return $traverseObj->getClass();
         //self::traverse($domDocument->documentElement, $namespace);
     }
@@ -230,24 +283,82 @@ class TraverseXSD {
             $type = self::getAttribute($attrs, "type");
             $stringType = $type->value;
 
-
-
             $name = self::getAttribute($attrs, "name");
             $ref = self::getAttribute($attrs, "ref");
             $doc = self::getDocumentation($classAttributeElement);
+            //TODO - Implementar restrições
+            $minMaxOccurence = self::getMinMaxOccursOfElement($classAttributeElement);
+
+            $collection = ($minMaxOccurence["minOccurs"] || $minMaxOccurence["maxOccurs"]);
+
             if ($type) {
-                $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
-                //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
-                $class->addProperty(new PHPProperty($name->value, new Object("\\".$typedNamespace."\\".self::classfy($type->value)), null, null, false, $doc));
+                if(in_array($type, self::$primary_types)) {//TIPO PRIMARIO
+                    $property = new PHPProperty($name, new Primary(Primary::TYPE_STRING,$type->value));
+                } else {
+                    $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
+                    //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
+                    $property = new PHPProperty($name->value, new Object("\\".$typedNamespace."\\".self::classfy($type->value), $collection), null, null, false, $doc);
+                }
+                $class->addProperty($property);
+                $class->addMethod($property->factoryGetter());
+                $class->addMethod($property->factorySetter());
+                if($collection) {
+                    $class->addMethod($property->factoryAdder(null, $this->factoryMaxOccursValidationBlock($property, $minMaxOccurence["maxOccurs"])));
+                    $class->addMethod($property->factoryMeasurer());
+                }
             } elseif ($name) {
                 //$classAttributeElement define o tipo internamente na tag complexType ou simpleType
-                $class->addProperty(new PHPProperty($name->value, new Object("\\".$namespace."\\".self::classfy($name->value)), null, null, false, $doc));
+                $property = new PHPProperty($name->value, new Object("\\".$namespace."\\".self::classfy($name->value), $collection), null, null, false, $doc);
+                $class->addProperty($property);
+                $class->addMethod($property->factoryGetter());
+                $class->addMethod($property->factorySetter());
+                if($collection) {
+                    $class->addMethod($property->factoryAdder(null, $this->factoryMaxOccursValidationBlock($property, $minMaxOccurence["maxOccurs"])));
+                    $class->addMethod($property->factoryMeasurer());
+                }
             } elseif ($ref) {
                 //TODO - Tratar o caso do ref
-                $class->addProperty(new PHPProperty("TODO_REF", new Object("\\".$namespace."\\"."TODO_REF")));
+                $refValue = $ref->value;
+                list($refName, $namespaceRef, $refType) = $this->refHandler($refValue);
+
+                $property = new PHPProperty($refName, new Object("\\".$namespaceRef."\\".$refType));
+                $class->addProperty($property);
+                $class->addMethod($property->factoryGetter());
+                $class->addMethod($property->factorySetter());
+                if($collection) {
+                    $class->addMethod($property->factoryAdder(null, $this->factoryMaxOccursValidationBlock($property, $minMaxOccurence["maxOccurs"])));
+                    $class->addMethod($property->factoryMeasurer());
+                }
             }
         }
     }
+
+
+
+    /**
+     * @param DOMNode $element
+     * @return array Retorna uma array com duas posições, minOccurs e maxOccurs. Caso um ou ambos attributos não existam
+     * no elemento, o valor indicado pela chave será null. Caso contrário o valor indicado pelas chaves retorna o valor dos attributos
+     */
+    private static function getMinMaxOccursOfElement(DOMNode $element) {
+        $occurrence = array();
+        $occurrence["minOccurs"] = $element->getAttribute("minOccurs");
+        $occurrence["maxOccurs"] = $element->getAttribute("maxOccurs");
+
+        return $occurrence;
+    }
+
+    private function getPrefixIfExists($value) {
+        $prefix = null;
+        $match = strpos($value, ":");
+        if ($match !== false) {
+            $prefix = substr($value, 0, $match);
+        }
+
+        return $prefix;
+    }
+
+
 
     /**
      * @param $namespace
@@ -555,38 +666,6 @@ class TraverseXSD {
             unset($restrictions["restrictions"]["length"]);
         }
 
-
-        /*$fractionDigits = self::getNodes($restrictionsChildren, "fractionDigits");
-        $restrictions["restrictions"]["fractionDigits"] = self::getAttribute($fractionDigits->attributes, "value")->value;
-
-        $length = self::getNodes($restrictionsChildren, "length");
-        $restrictions["restrictions"]["length"] = self::getAttribute($length->attributes, "value")->value;
-
-        $maxExclusive = self::getNodes($restrictionsChildren, "maxExclusive");
-        $restrictions["restrictions"]["maxExclusive"] = self::getAttribute($maxExclusive->attributes, "value")->value;
-
-        $maxLength = self::getNodes($restrictionsChildren, "maxLength");
-        $restrictions["restrictions"]["maxLength"] = self::getAttribute($maxLength->attributes, "value")->value;
-
-        $minExclusive = self::getNodes($restrictionsChildren, "minExclusive");
-        $restrictions["restrictions"]["minExclusive"] = self::getAttribute($minExclusive->attributes, "value")->value;
-
-        $minInclusive = self::getNodes($restrictionsChildren, "minInclusive");
-        $restrictions["restrictions"]["minInclusive"] = self::getAttribute($minInclusive->attributes, "value")->value;
-
-        $minLength = self::getNodes($restrictionsChildren, "minLength");
-        $restrictions["restrictions"]["minLength"] = self::getAttribute($minLength->attributes, "value")->value;
-
-        $pattern = self::getNodes($restrictionsChildren, "pattern");
-        $restrictions["restrictions"]["pattern"] = self::getAttribute($pattern->attributes, "value")->value;
-
-        $totalDigits = self::getNodes($restrictionsChildren, "totalDigits");
-        $restrictions["restrictions"]["totalDigits"] = self::getAttribute($totalDigits->attributes, "value")->value;
-
-        $whiteSpace = self::getNodes($restrictionsChildren, "whiteSpace");
-        $restrictions["restrictions"]["whiteSpace"] = self::getAttribute($whiteSpace->attributes, "value")->value;
-*/
-        //var_dump($restrictions);
         return $restrictions;
     }
 
@@ -614,7 +693,7 @@ class TraverseXSD {
                     $choiceTag = self::getNode($elements, "choice");
                     $simpleContent = self::getNode($elements, "simpleContent");
                     $complexContent = self::getNode($elements, "complexContent");
-                    $attributeTags = self::getNodes($elements, "attribute");
+                    //$attributeTags = self::getNodes($elements, "attribute");
 
                     $indicatorTag = null;
                     //   TODO - Tratar tag attribute
@@ -622,38 +701,61 @@ class TraverseXSD {
                         $indicatorTag = $sequenceTag;
                     } elseif ($choiceTag) {
                         $indicatorTag = $choiceTag;
-                    } elseif ($simpleContent) { //Usado para extender complexType
-                        //throw new Exception("Invalid indicator tag");
-                    } elseif ($complexContent) { //Usado para extender complexType
-                        //throw new Exception("Invalid indicator tag");
-                    }  elseif ($attributeTags) {  //TODO - Tratar attribute
+                    }
 
-                        foreach($attributeTags as $attributeTag) {  //TODO - Tratar attribute
-                            $ref = $attributeTag->getAttribute("ref");
-                            $type = $attributeTag->getAttribute("type");
-                            $use = $attributeTag->getAttribute("use");
-                            $name = $attributeTag->getAttribute("name");
-                            $fixed = $attributeTag->getAttribute("fixed");
-                            $default = $attributeTag->getAttribute("default");
-                            $id = $attributeTag->getAttribute("id");
+                    if ($simpleContent) { //inclui atributos ou restrições
+                        $simpleContentChildren = $simpleContent->childNodes;
+                        $extension = self::getNode($simpleContentChildren, "extension");
+                        $restriction = self::getNode($simpleContentChildren, "restriction");
 
-                            if($name) {
-                                if($type) {//A classe do atributo é definida externamente ou é um tipo primário
-                                    $typedNamespace = $this->getNamespaceByTypeAttr($type);
-                                    $property = new PHPProperty($name, new Object("\\".$typedNamespace."\\".self::classfy($type->value)));
+                        if($extension) {
+                            //TODO - base representa o tipo herdado, porém pode ser um tipo primário também
+                            $base = $extension->getAttribute("base");
+                            $extensionChildren = $extension->childNodes;
+                            $attributeTag = self::getNode($extensionChildren,"attribute");
 
-                                } elseif($ref) {//TODO - Extend algum tipo
-
-                                } else { //TODO - Define restrições em um simple type internamente
-                                    $property = new PHPProperty($name,  new Object("\\".$namespace."\\".self::classfy($name)));
-                                }
-
-                                $class->addProperty($property);
+                            if($attributeTag) {
+                                echo("base");
                             }
                         }
 
-                    }else {
-                        throw new Exception("Invalid indicator tag");
+                        if($restriction) {
+                            //self::restrictionToValidationMethod();//$restrictionChildren = $restriction->childNodes;
+
+                        }
+                    }
+
+                    if ($complexContent) { //Usado para extender complexType, inclui restrições e novos elementos
+                        $complexContentChildren = $complexContent->childNodes;
+                        $extension = self::getNode($complexContentChildren, "extension");
+                        $restriction = self::getNode($complexContentChildren, "restriction");
+
+                        if($extension) {
+                            //TODO - base representa o tipo herdado, porém pode ser um tipo primário também
+                            $base = $extension->getAttribute("base");
+                            $complexTypeTag = self::getNode($extensionChildren,"complexType");
+                            if($complexTypeTag) {
+                                //TODO - Arrumar para colocar extends
+                                $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
+                            }
+
+                        }
+
+                        if($restriction) {
+
+                        }
+                    }
+
+                    $attributeTags = array();
+                    $attributesMetadata = array("_attributes"=>self::getAttributes($node, $attributeTags));
+
+                    if ($attributeTags) {  //TODO - Tratar attribute
+
+                        $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata),true);
+                        $class->addProperty($metaProperty);
+                        $this->attributesHandler($namespace, $attributeTags, $class);
+
+
                     }
 
                     if($indicatorTag) {
@@ -661,7 +763,7 @@ class TraverseXSD {
                         $classAttributesElements = self::getNodes($childElements, "element");
                         $this->addProperties($classAttributesElements, $class, $namespace);
                     }
-
+                    $class->addMethod($class->factoryConstructor());
                     $this->ownerClass[$className] = $class;
                     //TODO - Ativar novamente
                     //echo("\n".$class->asPHP());
@@ -698,67 +800,7 @@ class TraverseXSD {
 
 
                     if ($complexTypeTag) {
-                        $complexTypeChildren = $complexTypeTag->childNodes;
-                        $sequenceTag = self::getNode($complexTypeChildren, "sequence");
-                        $choiceTag = self::getNode($complexTypeChildren, "choice");
-                        $simpleContent = self::getNode($complexTypeChildren, "simpleContent");
-                        $complexContent = self::getNode($complexTypeChildren, "complexContent");
-                        $attributeTags = self::getNodes($complexTypeChildren, "attribute");
-
-                        $indicatorTag = null;
-                        if ($sequenceTag) {
-                            $indicatorTag = $sequenceTag;
-                        } elseif ($choiceTag) {
-                            $indicatorTag = $choiceTag;
-                        }
-
-                        if($indicatorTag) {
-                            //TODO - Pode existir outros indicator dentro desse indicator
-                            $elementsBuffer = array();
-                            $indicatorMetadata = array("_elements"=>$this->getElements($indicatorTag, $elementsBuffer));
-                            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($indicatorMetadata),true);
-
-                            $class->addProperty($metaProperty);
-
-                            $this->addProperties($elementsBuffer, $class, $namespace);
-                        }
-
-                        if ($simpleContent) { //TODO - Tratar simpleContent
-                            //$indicatorTag = $simpleContent;
-                            echo("simpleContent found\n");
-                        }
-
-                        if ($complexContent) { //TODO - Tratar complexContent
-                            //$indicatorTag = $complexContent;
-                            echo("complexContent found\n");
-                        }
-
-                        if ($attributeTags) {  //TODO - Tratar attribute
-                            foreach($attributeTags as $attributeTag) {
-                                $ref = $attributeTag->getAttribute("ref");
-                                $type = $attributeTag->getAttribute("type");
-                                $use = $attributeTag->getAttribute("use");
-                                $name = $attributeTag->getAttribute("name");
-                                $fixed = $attributeTag->getAttribute("fixed");
-                                $default = $attributeTag->getAttribute("default");
-                                $id = $attributeTag->getAttribute("id");
-
-                                if($name) {
-                                    if($type) {//A classe do atributo é definida externamente ou é um tipo primário
-                                        $typedNamespace = $this->getNamespaceByTypeAttr($type);
-                                        $property = new PHPProperty($name, new Object("\\".$typedNamespace."\\".self::classfy($type->value)));
-
-                                    } elseif($ref) {//TODO - Extend algum tipo
-
-                                    } else { //TODO - Define restrições em um simple type internamente
-                                        $property = new PHPProperty($name,  new Object("\\".$namespace."\\".self::classfy($name)));
-                                    }
-
-                                    $class->addProperty($property);
-                                }
-
-                            }
-                        }
+                        $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
 
                     }
 
@@ -780,7 +822,7 @@ class TraverseXSD {
                         $class->addProperty(new PHPProperty($name->value, new Primary(Primary::TYPE_STRING), null, null, false, $doc));
                     }
 
-
+                    $class->addMethod($class->factoryConstructor());
                     $this->ownerClass[$className] = $class;
 
                     //TODO - Ativar novamente
@@ -821,17 +863,12 @@ class TraverseXSD {
                         $class->addMethod($property->factoryGetter());
                         $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
 
-
+                        $class->addMethod($class->factoryConstructor());
                         $this->ownerClass[$className] = $class;
 
                         //TODO - Ativar novamente
                         //echo("\n" . $class->asPHP());
                         self::createFile($namespace, $className, $class);
-
-
-
-
-
                     }
                 }
 
@@ -864,7 +901,6 @@ class TraverseXSD {
                         $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
                         $class->addMethod(new PHPMethod("function ".$key, new PHPBlock($validationMethod["code"]), array(), $visibility));
                     }
-                    //$toolClass->addMethod(new PHPMethod("__construct", $constructorCode, $constructorParameters, PHPMethod::VISIBILITY_PUBLIC));
                     $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
                     $class->addProperty($property);
                     $class->addMethod($property->factoryGetter());
@@ -875,6 +911,7 @@ class TraverseXSD {
 
                     //TODO - Ativar novamente
                     //echo("\n" . $class->asPHP());
+                    $class->addMethod($class->factoryConstructor());
                     self::createFile($namespace, $className, $class);
 
                 }
@@ -895,6 +932,7 @@ class TraverseXSD {
      */
     private function getSchemaLocationByTypeAttr($stringType)
     {
+        //$schemaLocation = $this->fileName;
         $schemaLocation = null;
         $match = strpos($stringType, ":");
         if ($match !== false) {
@@ -936,6 +974,51 @@ class TraverseXSD {
     }
 
     /**
+     * Esse método recebe um complex
+     * @param $complexType
+     * @param array $attributesBuffer
+     * @return array String
+     */
+
+    private function getAttributes($complexType, array &$attributesBuffer) {
+        $attributeIndicator = array();
+        $complexTypeChildren = $complexType->childNodes;
+        $attributesBuffer = self::getNodes($complexTypeChildren, "attribute");
+        foreach($attributesBuffer as $attribute) {
+            $name = $attribute->getAttribute("name");
+            $ref = $attribute->getAttribute("ref");
+            $fixed = $attribute->getAttribute("fixed");
+            $default = $attribute->getAttribute("default");
+            $use = $attribute->getAttribute("default");
+            $type = $attribute->getAttribute("type");
+
+
+            $buffer = array("name"=> $name);
+            if($ref) {
+                $buffer["ref"] = $ref;
+            }
+
+            if($use) {
+                $buffer["use"] = $use;
+            }
+
+            if($fixed) {
+                $buffer["fixed"] = $fixed;
+            } elseif($default) {
+                $buffer["default"] = $default;
+            }
+
+            if($type) {
+                $buffer["type"] = $type;
+            }
+
+            $attributeIndicator[] = $buffer;
+        }
+
+        return $attributeIndicator;
+    }
+
+    /**
      * @param $stringType
      * @return string
      */
@@ -962,6 +1045,224 @@ class TraverseXSD {
             }
         } else {
             throw new \Exception("Invalid type parameter");
+        }
+    }
+
+    private static function getPrimariesDataTypes() {
+        return array(
+            "ENTITIES",//string type -> http://www.w3schools.com/schema/schema_dtypes_string.asp
+            "ENTITY",
+            "ID",
+            "IDREF",
+            "IDREFS",
+            "language",
+            "Name",
+            "NCName",
+            "NMTOKEN",
+            "NMTOKENS",
+            "normalizedString",
+            "QName",
+            "string",
+            "token",//end string
+
+            "date",//date type -> http://www.w3schools.com/schema/schema_dtypes_date.asp
+            "dateTime",
+            "duration",
+            "gDay",
+            "gMonth",
+            "gMonthDay",
+            "gYear",
+            "gYearMonth",
+            "time", //end date
+
+            "byte",//numeric type -> http://www.w3schools.com/schema/schema_dtypes_numeric.asp
+            "decimal",
+            "int",
+            "integer",
+            "long",
+            "negativeInteger",
+            "nonNegativeInteger",
+            "nonPositiveInteger",
+            "positiveInteger",
+            "short",
+            "unsignedLong",
+            "unsignedInt",
+            "unsignedShort",
+            "unsignedByte",// end numeric
+
+            "anyURI", //miscellaneous type -> http://www.w3schools.com/schema/schema_dtypes_misc.asp
+            "base64Binary",
+            "boolean",
+            "double",
+            "float",
+            "hexBinary",
+            "NOTATION",
+            "QName" // end miscellaneous
+        );
+    }
+
+    /**
+     * @param $namespace
+     * @param $attributeTags
+     * @param $class
+     * @return array
+     */
+    private function attributesHandler($namespace, $attributeTags, $class)
+    {
+        foreach ($attributeTags as $attributeTag) { //TODO - Tratar attribute
+            $ref = $attributeTag->getAttribute("ref");
+            $type = $attributeTag->getAttribute("type");
+            $use = $attributeTag->getAttribute("use");
+            $name = $attributeTag->getAttribute("name");
+            $fixed = $attributeTag->getAttribute("fixed");
+            $default = $attributeTag->getAttribute("default");
+            $id = $attributeTag->getAttribute("id");
+
+            if ($name) {
+                if ($type) { //A classe do atributo é definida externamente ou é um tipo primário
+                    if (in_array($type, self::$primary_types)) {//tipo primário
+                        if($fixed) {
+                            $constant = new PHPConstant($name, $fixed);
+                        } else {
+                            $property = new PHPProperty(
+                                $name,
+                                new Primary(Primary::TYPE_STRING),
+                                PHPProperty::VISIBILITY_PROTECTED,
+                                $default ? new PHPValue($default) : null
+                            );
+                        }
+
+                    } else {//é um objeto
+                        $typedNamespace = $this->getNamespaceByTypeAttr($type);
+                        $property = new PHPProperty(
+                            $name,
+                            new Object("\\" . $typedNamespace . "\\" . self::classfy($type)),
+                            PHPProperty::VISIBILITY_PROTECTED,
+                            $default ? new PHPValue($default) : null
+                        );
+                    }
+
+
+                } elseif ($ref) { //TODO - Extend algum tipo
+
+                } else { //TODO - Define restrições em um simple type internamente
+                    $property = new PHPProperty(
+                        $name,
+                        new Object("\\" . $namespace . "\\" . self::classfy($name)),
+                        PHPProperty::VISIBILITY_PROTECTED,
+                        $default ? new PHPValue($default) : null
+                    );
+                }
+
+                if($constant) {
+                    $class->addConstant($constant);
+                } else {
+                    $class->addProperty($property);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $property
+     * @param $maxOccurs
+     * @return PHPBlock
+     */
+    private function factoryMaxOccursValidationBlock($property, $maxOccurs)
+    {
+        return new PHPBlock("if(count(\$this->{$property->getName()}) > {$maxOccurs}){throw new \\Exception(\"Property value out of bounds of max {$maxOccurs}\");}");
+    }
+
+    /**
+     * @param $refValue
+     * @return array
+     */
+    private function refHandler($refValue)
+    {
+        $valueWithoutPrefix = self::removePrefix($refValue);
+        $prefix = $this->getPrefixIfExists($refValue);
+        if ($prefix) {
+            $namespaceXSD = $this->getNamespaceByPrefix($prefix);
+            if ($namespaceXSD) {
+                $importTag = $this->getImportTagByNamespaceXML($namespaceXSD);
+                if ($importTag) {
+                    $schemaLocation = $this->getSchemaLocation($importTag);
+                    $document = new DOMDocument();
+                    $document->loadXML(file_get_contents($schemaLocation));
+                    $elementsList = $document->getElementsByTagName("element");
+                    for ($i = 0; $i < $elementsList->length; $i++) {
+                        $element = $elementsList->item($i);
+                        if ($element->getAttribute("name") == $valueWithoutPrefix) {
+                            $matchElement = $element;
+                            break;
+                        }
+                    }
+
+                    $matchType = $matchElement->getAttribute("type");
+                    $refName = $matchElement->getAttribute("name");
+                    $namespaceRef = self::getNamespaceByTypeAttr($matchType);
+                    $refType = self::removePrefix($matchType);
+                    return array($refName, $namespaceRef, $refType);
+                }
+                //return array($refName, $namespaceRef, $refType);
+            }
+            //return array($refName, $namespaceRef, $refType);
+        }
+        throw new \Exception("Era esperado um tipo com prefixo referente a uma xsd importado");
+        //return array($refName, $namespaceRef, $refType);
+    }
+
+    /**
+     * @param $namespace
+     * @param $complexTypeTag
+     * @param $class
+     */
+    private function internalComplexTypeHandler($namespace, $complexTypeTag, $class)
+    {
+        $complexTypeChildren = $complexTypeTag->childNodes;
+        $sequenceTag = self::getNode($complexTypeChildren, "sequence");
+        $choiceTag = self::getNode($complexTypeChildren, "choice");
+        $simpleContent = self::getNode($complexTypeChildren, "simpleContent");
+        $complexContent = self::getNode($complexTypeChildren, "complexContent");
+        //$attributeTags = self::getNodes($complexTypeChildren, "attribute");
+
+        $indicatorTag = null;
+        if ($sequenceTag) {
+            $indicatorTag = $sequenceTag;
+        } elseif ($choiceTag) {
+            $indicatorTag = $choiceTag;
+        }
+
+        if ($indicatorTag) {
+            //TODO - Pode existir outros indicator dentro desse indicator
+            $elementsBuffer = array();
+            $indicatorMetadata = array("_elements" => $this->getElements($indicatorTag, $elementsBuffer));
+            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($indicatorMetadata), true);
+
+            $class->addProperty($metaProperty);
+
+            $this->addProperties($elementsBuffer, $class, $namespace);
+        }
+
+        if ($simpleContent) { //TODO - Tratar simpleContent
+            //$indicatorTag = $simpleContent;
+            echo("simpleContent found\n");
+        }
+
+        if ($complexContent) { //TODO - Tratar complexContent
+            //$indicatorTag = $complexContent;
+            echo("complexContent found\n");
+        }
+        $attributeTags = array();
+        $attributesMetadata = array("_attributes" => self::getAttributes($complexTypeTag, $attributeTags));
+
+        if ($attributeTags) { //TODO - Tratar attribute
+
+            $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata), true);
+            $class->addProperty($metaProperty);
+            $this->attributesHandler($namespace, $attributeTags, $class);
+
+
         }
     }
 }

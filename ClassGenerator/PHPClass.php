@@ -216,4 +216,15 @@ PHP;
         }
 
     }
+
+    public function factoryConstructor() {
+        $bodyMethod = "";
+        $parameterArray = array();
+        foreach($this->properties as $property) {
+            $bodyMethod = $bodyMethod.$property->factorySetBlockAssign()->asPHP()."\n";
+            $parameterArray[] = $property->factoryParameter();
+        }
+
+        return new PHPMethod("function __construct", new PHPBlock($bodyMethod), $parameterArray);
+    }
 } 
