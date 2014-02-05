@@ -129,6 +129,7 @@ class TraverseXSD {
 
     const PRIMARY_TYPE_NAMESPACE = "PRIMARY_TYPES";
     const UTIL_NAMESPACE = "XSD2Class\\Util\\XML";
+    const UTIL_CLASS = "XML";
 
     protected $rootNamespace;
 
@@ -750,6 +751,15 @@ class TraverseXSD {
                             $base = $extension->getAttribute("base");
                             $complexTypeTag = self::getNode($extensionChildren,"complexType");
                             if($complexTypeTag) {
+                                if(in_array($base, self::$primary_types)){//É classe do tipo primário
+                                    $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
+                                    $parentClass = self::classfy($base);
+                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
+                                } else {//é uma classe que foi gerada
+                                    $parentNamespace = self::getNamespaceByTypeAttr($base);
+                                    $parentClass = self::classfy($base);
+                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
+                                }
                                 //TODO - Arrumar para colocar extends
                                 $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
                             }
