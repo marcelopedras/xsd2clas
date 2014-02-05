@@ -1,14 +1,14 @@
 <?php
-namespace PRIMARY_TYPES;
 
+namespace XsdParser\PrimaryTypes;
 
 class Base64Binary {
 
 
     protected $_value;
 
-    public function __construct($_value) {
-        $this->_value = $_value;
+    public function __construct($base64String) {
+        $this->_value = $base64String;
         $this->validate();
 
     }

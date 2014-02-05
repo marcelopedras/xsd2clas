@@ -76,6 +76,8 @@ class TraverseXSD {
 
     protected $documents = array();
 
+    protected  $defaultNamespaceXsd;
+
     protected static $primary_types = array(
         "ENTITIES",//string type -> http://www.w3schools.com/schema/schema_dtypes_string.asp
         "ENTITY",
@@ -127,13 +129,14 @@ class TraverseXSD {
         "QName" // end miscellaneous
     );
 
-    const PRIMARY_TYPE_NAMESPACE = "PRIMARY_TYPES";
+    const PRIMARY_TYPE_NAMESPACE = "XsdParser\\PrimaryTypes";
     const UTIL_NAMESPACE = "XSD2Class\\Util\\XML";
     const UTIL_CLASS = "XML";
 
     protected $rootNamespace;
 
-    function __construct($schema, $namespace, $fileName) {
+    function __construct($schema, $namespace, $fileName, $defaultNamespaceXsd = "http://www.w3.org/2001/XMLSchema") {
+        $this->defaultNamespaceXsd = $defaultNamespaceXsd;
         $namespace = self::namespacefy($namespace);
         $this->rootNamespace = $namespace;
         $this->fileName = $fileName;
@@ -143,11 +146,12 @@ class TraverseXSD {
         $this->imports = self::getNodes($schemaChildren, "import");
 
         $this->importClass = $this->traverseImportFiles($schemaChildren);
-        $this->includeClass = self::traverseIncludeFiles($schemaChildren);
+        $this->includeClass = $this->traverseIncludeFiles($schemaChildren);
         $this->traverse($schema, $namespace);
 
         echo("\nFinished");
     }
+
 
     public function getClass() {
         return array(
@@ -167,17 +171,17 @@ class TraverseXSD {
         return $buffer;
     }
 
-    private static function traverseIncludeFiles($schemaChildren, $namespace ="") {
+    private function traverseIncludeFiles($schemaChildren, $namespace ="") {
         $includeTags = self::getNodes($schemaChildren, "include");
         $buffer = array();
         foreach($includeTags as $includeTag) {
-            $buffer[] = self::traverseAnotherFile($includeTag, $namespace);
+            $buffer[] = $this->traverseAnotherFile($includeTag, $namespace);
         }
 
         return $buffer;
     }
 
-    private static function traverseAnotherFile($includeOrImportTags, $namespace = "") {
+    private function traverseAnotherFile($includeOrImportTags, $namespace = "") {
         $attributes = self::getAttributesNames($includeOrImportTags->attributes);
         $fileName = $attributes["schemaLocation"];
         $domDocument = new DOMDocument();
@@ -185,7 +189,7 @@ class TraverseXSD {
         if(!$namespace) {
             $namespace = self::namespacefy($fileName);
         }
-        $traverseObj = new TraverseXSD($domDocument->documentElement, $namespace, $fileName);
+        $traverseObj = new TraverseXSD($domDocument->documentElement, $namespace, $fileName, $this->defaultNamespaceXsd);
         return $traverseObj->getClass();
         //self::traverse($domDocument->documentElement, $namespace);
     }
@@ -252,7 +256,7 @@ class TraverseXSD {
      * @return string
      */
     private static function namespacefy($fileName) {
-        return strtoupper(str_replace(array(".xsd", ".", "-", "_", ":"), "", $fileName));
+        return ucfirst(str_replace(array(".xsd", ".", "-", "_", ":"), "", $fileName));
     }
 
     private function getNamespaceByPrefix($prefix) {
@@ -296,13 +300,10 @@ class TraverseXSD {
             $minMaxOccurence = self::getMinMaxOccursOfElement($classAttributeElement);
 
             $collection = ($minMaxOccurence["minOccurs"] || $minMaxOccurence["maxOccurs"]);
-
             if ($type) {
-                if(in_array($type, self::$primary_types)) {//TIPO PRIMARIO
-                    $property = new PHPProperty($name, new Primary(Primary::TYPE_STRING,$type->value));
-                    /*$primaryTypeNamespace = self::PRIMARY_TYPE_NAMESPACE;
+                if($this->isPrimaryType($type->value)) {
                     $primaryClassName = self::classfy($type->value);
-                    $property = new PHPProperty($name, new Object("\\" . $primaryTypeNamespace . "\\" . $primaryClassName));*/
+                    $property = new PHPProperty($name->value, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" . $primaryClassName));
                 } else {
                     $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
                     //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
@@ -720,7 +721,7 @@ class TraverseXSD {
                             $extensionChildren = $extension->childNodes;
                             $attributeTag = self::getNode($extensionChildren,"attribute");
 
-                            if($attributeTag) {//TODO - Supondo que o tipo base sempre é uma classe e está em ./PRIMARY_TYPES
+                            if($attributeTag) {//TODO - Supondo que o tipo base sempre é uma classe e está em ./PrimaryTypes
                                 if(in_array($base, self::$primary_types)){//É classe do tipo primário
                                     $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
                                     $parentClass = self::classfy($base);
@@ -1015,6 +1016,37 @@ class TraverseXSD {
         } else {
             throw new \Exception("Invalid type parameter");
         }
+    }
+
+    /**
+     * @param $fullTypeValue É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
+     * deve ser passado junto.
+     * Ex: <element name="Teste" type="xs:ID" ...
+     * O valor do attributo type passado para o método deverá ser 'xs:ID'
+     * @return String -Retorna o namespace utilizado pelo atributo no XSD
+     */
+    private function getNamespaceXsdByAttr($fullTypeValue){
+        $prefix = $this->getPrefixIfExists($fullTypeValue);
+        if($prefix) {
+            $namespace = $this->getNamespaceByPrefix($prefix);
+        } else {//O atributo é do namespace default
+            $namespace = $this->schema->getAttribute("xmlns");
+        }
+
+        return $namespace;
+    }
+
+    /**
+     * @param $fullTypeValue É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
+     * deve ser passado junto.
+     * Ex: <element name="Teste" type="xs:ID" ...
+     * O valor do attributo type passado para o método deverá ser 'xs:ID'
+     *
+     * @return bool - Retorna true se o tipo é primário ou false caso não seja.
+     */
+    private function isPrimaryType($fullTypeValue) {
+        $namespaceXsd = $this->getNamespaceXsdByAttr($fullTypeValue);
+        return $namespaceXsd === $this->defaultNamespaceXsd ? true : false;
     }
 
     private static function getPrimariesDataTypes() {
