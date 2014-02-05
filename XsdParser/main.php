@@ -52,6 +52,8 @@ const DOMDOCUMENTTYPE = 10;
 const DOMDOCUMENTFRAGMENT = 11;
 const DOMNOTATION = 12;
 
+
+
 $document = new DOMDocument();
 $fileName = "leiauteNFe_v3.10.xsd";
 $document->loadXML(file_get_contents($fileName));
@@ -124,6 +126,9 @@ class TraverseXSD {
         "NOTATION",
         "QName" // end miscellaneous
     );
+
+    const PRIMARY_TYPE_NAMESPACE = "PRIMARY_TYPES";
+    const UTIL_NAMESPACE = "XSD2Class\\Util\\XML";
 
     protected $rootNamespace;
 
@@ -294,6 +299,9 @@ class TraverseXSD {
             if ($type) {
                 if(in_array($type, self::$primary_types)) {//TIPO PRIMARIO
                     $property = new PHPProperty($name, new Primary(Primary::TYPE_STRING,$type->value));
+                    /*$primaryTypeNamespace = self::PRIMARY_TYPE_NAMESPACE;
+                    $primaryClassName = self::classfy($type->value);
+                    $property = new PHPProperty($name, new Object("\\" . $primaryTypeNamespace . "\\" . $primaryClassName));*/
                 } else {
                     $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
                     //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
@@ -687,13 +695,10 @@ class TraverseXSD {
                     //TODO - Changing namespace
                     $namespace = $namespace . "\\" . $name->value;
 
-
-
                     $sequenceTag = self::getNode($elements, "sequence");
                     $choiceTag = self::getNode($elements, "choice");
                     $simpleContent = self::getNode($elements, "simpleContent");
                     $complexContent = self::getNode($elements, "complexContent");
-                    //$attributeTags = self::getNodes($elements, "attribute");
 
                     $indicatorTag = null;
                     //   TODO - Tratar tag attribute
@@ -702,7 +707,7 @@ class TraverseXSD {
                     } elseif ($choiceTag) {
                         $indicatorTag = $choiceTag;
                     }
-
+                    //TODO - AQUI
                     if ($simpleContent) { //inclui atributos ou restrições
                         $simpleContentChildren = $simpleContent->childNodes;
                         $extension = self::getNode($simpleContentChildren, "extension");
@@ -714,14 +719,24 @@ class TraverseXSD {
                             $extensionChildren = $extension->childNodes;
                             $attributeTag = self::getNode($extensionChildren,"attribute");
 
-                            if($attributeTag) {
-                                echo("base");
+                            if($attributeTag) {//TODO - Supondo que o tipo base sempre é uma classe e está em ./PRIMARY_TYPES
+                                if(in_array($base, self::$primary_types)){//É classe do tipo primário
+                                    $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
+                                    $parentClass = self::classfy($base);
+                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
+                                    $this->typedAttributesHandler($namespace, array($attributeTag), $class);
+
+                                } else {//é uma classe que foi gerada
+                                    $parentNamespace = self::getNamespaceByTypeAttr($base);
+                                    $parentClass = self::classfy($base);
+                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
+                                    $this->typedAttributesHandler($namespace, array($attributeTag), $class);
+                                }
                             }
                         }
 
                         if($restriction) {
-                            //self::restrictionToValidationMethod();//$restrictionChildren = $restriction->childNodes;
-
+                            $this->restrictionHandler($restriction, $class);
                         }
                     }
 
@@ -738,11 +753,10 @@ class TraverseXSD {
                                 //TODO - Arrumar para colocar extends
                                 $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
                             }
-
                         }
 
                         if($restriction) {
-
+                            $this->restrictionHandler($restriction, $class);
                         }
                     }
 
@@ -753,7 +767,7 @@ class TraverseXSD {
 
                         $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata),true);
                         $class->addProperty($metaProperty);
-                        $this->attributesHandler($namespace, $attributeTags, $class);
+                        $this->typedAttributesHandler($namespace, $attributeTags, $class);
 
 
                     }
@@ -768,11 +782,6 @@ class TraverseXSD {
                     //TODO - Ativar novamente
                     //echo("\n".$class->asPHP());
                     self::createFile($namespace, $className, $class);
-
-
-                    //die();
-
-
                 }
 
             }
@@ -850,20 +859,7 @@ class TraverseXSD {
                         $simpleTypeChildren = $node->childNodes;
                         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
 
-                        $restrictions = self::getRestrictions($restrictionTag);
-                        $doc = self::restrictionsToDoc($restrictions);
-                        $validationMethods = self::restrictionToValidationMethod($restrictions);
-                        foreach($validationMethods as $key => $validationMethod) {
-                            $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
-                            $class->addMethod(new PHPMethod("function ".$key, new PHPBlock($validationMethod["code"]), array(), $visibility));
-                        }
-                        //$toolClass->addMethod(new PHPMethod("__construct", $constructorCode, $constructorParameters, PHPMethod::VISIBILITY_PUBLIC));
-                        $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
-                        $class->addProperty($property);
-                        $class->addMethod($property->factoryGetter());
-                        $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
-
-                        $class->addMethod($class->factoryConstructor());
+                        $this->restrictionHandler($restrictionTag, $class);
                         $this->ownerClass[$className] = $class;
 
                         //TODO - Ativar novamente
@@ -877,54 +873,17 @@ class TraverseXSD {
             if($node->localName === "attribute") {
                 $ref = $node->getAttribute("ref");
                 $type = $node->getAttribute("type");
-                $name = $node->getAttribute("name");
 
                 if(!$ref && !$type) {//Se não tem type e ref, então define um simpleType internamente
-                    $nodeChildren = $node->childNodes;
-
-                    $doc = self::getDocumentation($node);
-                    $simpleType = self::getNode($nodeChildren, "simpleType");
-
-
-
-                    $className = self::classfy($name);
-                    //TODO - Changing Namespace
-                    //$namespace = $namespace . "\\" . $name->value;
-                    $class = new PHPClass($className, null, new PHPNamespace($namespace),null, $doc);
-                    $simpleTypeChildren = $simpleType->childNodes;
-                    $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
-
-                    $restrictions = self::getRestrictions($restrictionTag);
-                    $doc = self::restrictionsToDoc($restrictions);
-                    $validationMethods = self::restrictionToValidationMethod($restrictions);
-                    foreach($validationMethods as $key => $validationMethod) {
-                        $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
-                        $class->addMethod(new PHPMethod("function ".$key, new PHPBlock($validationMethod["code"]), array(), $visibility));
-                    }
-                    $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
-                    $class->addProperty($property);
-                    $class->addMethod($property->factoryGetter());
-                    $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
-
-
-                    //$this->ownerClass[$className] = $class;
-
-                    //TODO - Ativar novamente
-                    //echo("\n" . $class->asPHP());
-                    $class->addMethod($class->factoryConstructor());
+                    list($className, $class) = $this->internalAttributeHandler($node, $namespace);
                     self::createFile($namespace, $className, $class);
-
                 }
             }
 
             foreach ($node->childNodes as $childNode) {
                 $this->traverse($childNode, $namespace);
             }
-        } /*else {
-            if(trim($node->nodeValue)) {
-                echo($spaces . $node->nodeValue)."\n";
-            }
-        }    */
+        }
     }
 
     /**
@@ -1107,7 +1066,7 @@ class TraverseXSD {
      * @param $class
      * @return array
      */
-    private function attributesHandler($namespace, $attributeTags, $class)
+    private function typedAttributesHandler($namespace, $attributeTags, $class)
     {
         foreach ($attributeTags as $attributeTag) { //TODO - Tratar attribute
             $ref = $attributeTag->getAttribute("ref");
@@ -1260,10 +1219,65 @@ class TraverseXSD {
 
             $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata), true);
             $class->addProperty($metaProperty);
-            $this->attributesHandler($namespace, $attributeTags, $class);
-
-
+            $this->typedAttributesHandler($namespace, $attributeTags, $class);
         }
+    }
+
+    /**
+     * @param $restrictionTag
+     * @param $class     *
+     */
+    private function restrictionHandler($restrictionTag, $class)
+    {
+        $restrictions = self::getRestrictions($restrictionTag);
+        $doc = self::restrictionsToDoc($restrictions);
+        $validationMethods = self::restrictionToValidationMethod($restrictions);
+        foreach ($validationMethods as $key => $validationMethod) {
+            $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
+            $class->addMethod(new PHPMethod("function " . $key, new PHPBlock($validationMethod["code"]), array(), $visibility));
+        }
+        $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
+        $class->addProperty($property);
+        $class->addMethod($property->factoryGetter());
+        $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
+
+        $class->addMethod($class->factoryConstructor(null, new PHPBlock("\$this->validate();")));
+        //return array($restrictions, $doc, $validationMethods, $key, $validationMethod, $visibility, $property);
+    }
+
+    /**
+     * @param $attributeTag
+     * @param $namespace
+     * @return array
+     */
+    private function internalAttributeHandler($attributeTag, $namespace)
+    {
+        $name = $attributeTag->getAttribute("name");
+        $nodeChildren = $attributeTag->childNodes;
+
+        $doc = self::getDocumentation($attributeTag);
+        $simpleType = self::getNode($nodeChildren, "simpleType");
+        $className = self::classfy($name);
+        //TODO - Changing Namespace
+        //$namespace = $namespace . "\\" . $name->value;
+        $class = new PHPClass($className, null, new PHPNamespace($namespace), null, $doc);
+        $simpleTypeChildren = $simpleType->childNodes;
+        $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
+
+        /*$restrictions = self::getRestrictions($restrictionTag);
+        $doc = self::restrictionsToDoc($restrictions);
+        $validationMethods = self::restrictionToValidationMethod($restrictions);
+        foreach ($validationMethods as $key => $validationMethod) {
+            $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
+            $class->addMethod(new PHPMethod("function " . $key, new PHPBlock($validationMethod["code"]), array(), $visibility));
+        }
+        $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
+        $class->addProperty($property);
+        $class->addMethod($property->factoryGetter());
+        $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
+        $class->addMethod($class->factoryConstructor(null, new PHPBlock("\$this->validate();")));*/
+        $this->restrictionHandler($restrictionTag, $class);
+        return array($className, $class);
     }
 }
 

@@ -110,7 +110,13 @@ abstract class XMLDocument {
 
     //whiteSpace
     public function validateWhiteSpace($value, $whiteSpaceHandler, $propertyName) {
-        //if(strpos)
+        if($whiteSpaceHandler == "replace") {
+            $this->validateWhiteSpaceReplace($value, $propertyName);
+        } elseif($whiteSpaceHandler == "collapse") {
+            $this->validateWhiteSpaceCollapse($value, $propertyName);
+        } else {
+            throw XMLException::invalidWhiteSpaceHandler($whiteSpaceHandler);
+        }
     }
 
     private function validateWhiteSpaceReplace($value, $propertyName) {

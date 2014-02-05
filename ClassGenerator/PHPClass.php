@@ -217,7 +217,17 @@ PHP;
 
     }
 
-    public function factoryConstructor() {
+    public function factoryConstructor(PHPBlock $preMethod = null, PHPBlock $posMethod=null) {
+        $preMethodString = '';
+        $posMethodString = '';
+        if($preMethod) {
+            $preMethodString = "\n".$preMethod->asPHP()."\n";
+        }
+
+        if($posMethod) {
+            $posMethodString = "\n".$posMethod->asPHP()."\n";
+        }
+
         $bodyMethod = "";
         $parameterArray = array();
         foreach($this->properties as $property) {
@@ -225,6 +235,15 @@ PHP;
             $parameterArray[] = $property->factoryParameter();
         }
 
-        return new PHPMethod("function __construct", new PHPBlock($bodyMethod), $parameterArray);
+        return new PHPMethod("function __construct", new PHPBlock($preMethodString.$bodyMethod.$posMethodString), $parameterArray);
     }
+
+    public function setParentClass(PHPClass $class) {
+        $this->parentClass = $class;
+    }
+
+    public function getParentClass() {
+        return $this->parentClass;
+    }
+
 } 

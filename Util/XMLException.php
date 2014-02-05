@@ -48,5 +48,9 @@ class XMLException extends \Exception{
         return new self("Property {$propertyName} value format is invalid. The value must have line breaks, tabs, and carriage return exchanged for space.");
     }
 
+    public static function invalidWhiteSpaceHandler($writeSpaceHandler) {
+        return new self("Invalid whiteSpaceHandler {$writeSpaceHandler}.");
+    }
+
 
 }
