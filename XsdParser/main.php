@@ -302,8 +302,7 @@ class TraverseXSD {
             $collection = ($minMaxOccurence["minOccurs"] || $minMaxOccurence["maxOccurs"]);
             if ($type) {
                 if($this->isPrimaryType($type->value)) {
-                    $primaryClassName = self::classfy($type->value);
-                    $property = new PHPProperty($name->value, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" . $primaryClassName));
+                    $property = $this->factoryPrimaryTypeProperty($type->value, $name->value);
                 } else {
                     $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
                     //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
@@ -318,7 +317,7 @@ class TraverseXSD {
                 }
             } elseif ($name) {
                 //$classAttributeElement define o tipo internamente na tag complexType ou simpleType
-                $property = new PHPProperty($name->value, new Object("\\".$namespace."\\".self::classfy($name->value), $collection), null, null, false, $doc);
+                $property = new PHPProperty($name->value, new Object("\\".$namespace."\\".self::classfy($name->value)."\\".self::classfy($name->value), $collection), null, null, false, $doc);
                 $class->addProperty($property);
                 $class->addMethod($property->factoryGetter());
                 $class->addMethod($property->factorySetter());
@@ -377,7 +376,8 @@ class TraverseXSD {
      */
     private static function createFile($namespace, $className, $class)
     {
-        $fullPath = "{$namespace}/";
+        $fullPath = "{$namespace}\\";
+        $class->setNamespace(new PHPNamespace($namespace));
         mkdir($fullPath, 0, true);
         $arqName = self::classfy($className). ".php";
 
@@ -695,7 +695,7 @@ class TraverseXSD {
 
                     $class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
                     //TODO - Changing namespace
-                    $namespace = $namespace . "\\" . $name->value;
+                    //$namespace = $namespace . "\\" . $name->value;
 
                     $sequenceTag = self::getNode($elements, "sequence");
                     $choiceTag = self::getNode($elements, "choice");
@@ -722,18 +722,8 @@ class TraverseXSD {
                             $attributeTag = self::getNode($extensionChildren,"attribute");
 
                             if($attributeTag) {//TODO - Supondo que o tipo base sempre é uma classe e está em ./PrimaryTypes
-                                if(in_array($base, self::$primary_types)){//É classe do tipo primário
-                                    $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
-                                    $parentClass = self::classfy($base);
-                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
-                                    $this->typedAttributesHandler($namespace, array($attributeTag), $class);
-
-                                } else {//é uma classe que foi gerada
-                                    $parentNamespace = self::getNamespaceByTypeAttr($base);
-                                    $parentClass = self::classfy($base);
-                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
-                                    $this->typedAttributesHandler($namespace, array($attributeTag), $class);
-                                }
+                                $this->setParentClass($base, $class);
+                                $this->typedAttributesHandler($namespace, array($attributeTag), $class);
                             }
                         }
 
@@ -752,16 +742,7 @@ class TraverseXSD {
                             $base = $extension->getAttribute("base");
                             $complexTypeTag = self::getNode($extensionChildren,"complexType");
                             if($complexTypeTag) {
-                                if(in_array($base, self::$primary_types)){//É classe do tipo primário
-                                    $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
-                                    $parentClass = self::classfy($base);
-                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
-                                } else {//é uma classe que foi gerada
-                                    $parentNamespace = self::getNamespaceByTypeAttr($base);
-                                    $parentClass = self::classfy($base);
-                                    $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
-                                }
-                                //TODO - Arrumar para colocar extends
+                                $this->setParentClass($base, $class);
                                 $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
                             }
                         }
@@ -864,9 +845,8 @@ class TraverseXSD {
                 if(!$type) {
                     if($name) {
                         $className = self::classfy($name->value);
-                        //TODO - Changing Namespace
-                        //$namespace = $namespace . "\\" . $name->value;
                         $class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
+
                         $simpleTypeChildren = $node->childNodes;
                         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
 
@@ -1121,8 +1101,9 @@ class TraverseXSD {
 
             if ($name) {
                 if ($type) { //A classe do atributo é definida externamente ou é um tipo primário
-                    if (in_array($type, self::$primary_types)) {//tipo primário
+                    if ($this->isPrimaryType($type)) {//tipo primário
                         if($fixed) {
+                            //TODO - não posso ter um objeto constante, pensar em um jeito de resolver isso
                             $constant = new PHPConstant($name, $fixed);
                         } else {
                             $property = new PHPProperty(
@@ -1227,6 +1208,8 @@ class TraverseXSD {
         $complexContent = self::getNode($complexTypeChildren, "complexContent");
         //$attributeTags = self::getNodes($complexTypeChildren, "attribute");
 
+
+
         $indicatorTag = null;
         if ($sequenceTag) {
             $indicatorTag = $sequenceTag;
@@ -1300,8 +1283,6 @@ class TraverseXSD {
         $doc = self::getDocumentation($attributeTag);
         $simpleType = self::getNode($nodeChildren, "simpleType");
         $className = self::classfy($name);
-        //TODO - Changing Namespace
-        //$namespace = $namespace . "\\" . $name->value;
         $class = new PHPClass($className, null, new PHPNamespace($namespace), null, $doc);
         $simpleTypeChildren = $simpleType->childNodes;
         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
@@ -1320,6 +1301,41 @@ class TraverseXSD {
         $class->addMethod($class->factoryConstructor(null, new PHPBlock("\$this->validate();")));*/
         $this->restrictionHandler($restrictionTag, $class);
         return array($className, $class);
+    }
+
+    /**
+     * @param $type
+     * @param $name
+     * @return PHPProperty - Se o tipo é de fato primário, retorna a PHPProperty apropriada, senão lança uma exceção
+     * @throws Exception - Lança uma exceção se o tipo não for primário
+     */
+    private function factoryPrimaryTypeProperty($type, $name)
+    {
+        if($this->isPrimaryType($type)) {
+            $primaryClassName = self::classfy($type);
+            $property = new PHPProperty($name, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" . $primaryClassName));
+            return $property;
+        }
+
+        throw new \Exception("'{$type}' is not a primary type");
+    }
+
+    /**
+     * Seta a classe com a parent class adequada, verificando se é um tipo primário do xsd ou é um tipo definido localmente
+     * @param $base
+     * @param $class
+     */
+    private function setParentClass($base, $class)
+    {
+        if($this->isPrimaryType($base)) {
+            $parentNamespace = self::PRIMARY_TYPE_NAMESPACE;
+            $parentClass = self::classfy($base);
+        } else {
+            $parentNamespace = self::getNamespaceByTypeAttr($base);
+            $parentClass = self::classfy($base);
+        }
+        $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
+        //TODO - Poderia lançar uma exceção no caso de um tipo inexistente??
     }
 }
 
