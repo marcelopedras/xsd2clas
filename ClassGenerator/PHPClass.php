@@ -196,7 +196,7 @@ PHP;
         $this->constants[] = $constant;
     }
 
-    public function addProperty(PHPProperty $property, $generateSets = true, $generateGets = true) {
+    public function addProperty(PHPProperty $property) {
         $this->properties[] = $property;
 
     }

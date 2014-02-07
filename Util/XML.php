@@ -26,7 +26,7 @@ abstract class XMLDocument {
         $matches = array();
         if(preg_match_all($pattern,$value, $matches)) {
             foreach($matches as $match) {
-                if(count($match) && strlen($match[0]) == strlen($this->_value)) {
+                if(count($match) && strlen($match[0]) == strlen($this->value)) {
                     return;
                 }
             }

@@ -234,7 +234,6 @@ class TraverseXSD {
     }
 
     private static function removePrefix($string) {
-        $buffer = "";
         $match = strpos($string, ":");
         if ($match !== false) {
             $prefix = substr($string, 0, $match);
@@ -378,7 +377,8 @@ class TraverseXSD {
     {
         $fullPath = "{$namespace}\\";
         $class->setNamespace(new PHPNamespace($namespace));
-        mkdir($fullPath, 0, true);
+        $fullPath = str_replace("\\", DIRECTORY_SEPARATOR, $fullPath);
+        mkdir($fullPath, 0777, true);
         $arqName = self::classfy($className). ".php";
 
         $file = fopen($fullPath . $arqName, "w+");
@@ -534,7 +534,7 @@ class TraverseXSD {
                         "if(is_numeric(\$this->value)) {
                             if(strpos(\$this->value, '.') === false) {
                                 if(\$this->_value >= 0) {
-                                    if(strlen($value) == {$totalDigits} ) {
+                                    if(strlen(\$this->value) == {$totalDigits} ) {
                                         return;
                                     }
                                 }
@@ -999,7 +999,7 @@ class TraverseXSD {
     }
 
     /**
-     * @param $fullTypeValue É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
+     * @param $fullTypeValue - É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
      * deve ser passado junto.
      * Ex: <element name="Teste" type="xs:ID" ...
      * O valor do attributo type passado para o método deverá ser 'xs:ID'
@@ -1017,7 +1017,7 @@ class TraverseXSD {
     }
 
     /**
-     * @param $fullTypeValue É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
+     * @param $fullTypeValue - É o valor completo do atributo type da tag. Ou seja, se o atributo for prefixado, o prefixo
      * deve ser passado junto.
      * Ex: <element name="Teste" type="xs:ID" ...
      * O valor do attributo type passado para o método deverá ser 'xs:ID'
@@ -1098,7 +1098,8 @@ class TraverseXSD {
             $fixed = $attributeTag->getAttribute("fixed");
             $default = $attributeTag->getAttribute("default");
             $id = $attributeTag->getAttribute("id");
-
+            $constant = null;
+            $property = null;
             if ($name) {
                 if ($type) { //A classe do atributo é definida externamente ou é um tipo primário
                     if ($this->isPrimaryType($type)) {//tipo primário
@@ -1138,8 +1139,10 @@ class TraverseXSD {
 
                 if($constant) {
                     $class->addConstant($constant);
-                } else {
+                } elseif($property) {
                     $class->addProperty($property);
+                } else {
+                    throw new \Exception("Expected constant or property and given a null value");
                 }
             }
         }

@@ -96,7 +96,7 @@ PHP;
 
     public function factoryAdder(PHPBlock $preMethod = null, PHPBlock $posMethod=null) {
         if(!$this->type->isCollection()) {
-            throw \Exception("This not is a collection, adder can not be fabricate");
+            throw new \Exception("This not is a collection, adder can not be fabricate");
         }
         $preMethodString = '';
         $posMethodString = '';
@@ -116,7 +116,7 @@ PHP;
 
     public function factoryMeasurer() {
         if(!$this->type->isCollection()) {
-            throw \Exception("This not is a collection, measurer can not be fabricate");
+            throw new \Exception("This not is a collection, measurer can not be fabricate");
         }
         return new PHPMethod(
             "function ".$this->name."Length",
