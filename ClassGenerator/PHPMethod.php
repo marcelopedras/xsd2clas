@@ -51,4 +51,8 @@ class PHPMethod implements PHPCode{
         {$this->getBodyCode()}
     }";
     }
+
+    public function getName() {
+        return $this->name;
+    }
 }

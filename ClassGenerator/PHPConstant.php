@@ -40,4 +40,8 @@ class PHPConstant implements PHPCode{
     public function getValue() {
         return $this->value;
     }
+
+    public function factoryGetter() {
+        return new PHPMethod("function get".ucfirst($this->name), new PHPBlock('return self::'.$this->name.';'));
+    }
 } 

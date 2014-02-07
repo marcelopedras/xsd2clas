@@ -197,12 +197,16 @@ PHP;
     }
 
     public function addProperty(PHPProperty $property) {
-        $this->properties[] = $property;
+        if($this->validateProperty($property)){
+            $this->properties[] = $property;
+        }
 
     }
 
     public function addMethod(PHPMethod $method) {
-        $this->methods[] = $method;
+        if($this->validateMethod($method)) {
+            $this->methods[] = $method;
+        }
     }
 
     public function getDoc() {
@@ -231,8 +235,10 @@ PHP;
         $bodyMethod = "";
         $parameterArray = array();
         foreach($this->properties as $property) {
-            $bodyMethod = $bodyMethod.$property->factorySetBlockAssign()->asPHP()."\n";
-            $parameterArray[] = $property->factoryParameter();
+            if(!$property->isStatic()) {
+                $bodyMethod = $bodyMethod.$property->factorySetBlockAssign()->asPHP()."\n";
+                $parameterArray[] = $property->factoryParameter();
+            }
         }
 
         return new PHPMethod("function __construct", new PHPBlock($preMethodString.$bodyMethod.$posMethodString), $parameterArray);
@@ -246,4 +252,81 @@ PHP;
         return $this->parentClass;
     }
 
+    /*public function validateProperties() {
+        $propertiesName = array();
+        foreach($this->properties as $property) {
+            $propertiesName[] = $property->getName();
+        }
+        $uniqueValues = array_unique($propertiesName);
+        if(count($propertiesName)!==count($uniqueValues)) {
+            $diffs = array_diff_assoc($propertiesName,$uniqueValues);
+            $indexMatching = array();
+            foreach($diffs as $diff) {
+                $diffBuffer = array();
+                foreach($propertiesName as $key => $propertyName) {
+                    if($propertyName === $diff) {
+                        $diffBuffer[] = $key;
+                    }
+                }
+                $indexMatching[$diff] = $diffBuffer;
+            }
+
+            foreach($indexMatching as $match){
+
+                $namespaceOrTypeBuffer = array();
+                for($i = 0; $i< count($match); $i++) {
+                    $namespaceOrTypeBuffer[]=$this->properties[$match[$i]]->getType()->getName();
+                }
+                if(count($namespaceOrTypeBuffer)===count(array_unique($namespaceOrTypeBuffer))) {
+                    throw new \Exception("Existem propriedades do mesmo nome com tipos diferentes, impossível tratar isso");
+                }
+                //TODO -Se nao aconteceu uma excecao, deixar apenas uma property dos tipos repetidos
+                for($i = 1; $i< count($match); $i++) {
+                    unset($this->properties[$match[$i]]);
+                }
+
+                //TODO - Remover métodos duplicados também
+
+            }
+
+        }
+
+
+    }*/
+
+    public function validateMethod(PHPMethod $newMethod) {
+        $repeatedMethods  = array();
+        foreach($this->methods as $method) {
+            if($newMethod->getName() === $method->getName()) {
+                $repeatedMethods[] = $method;
+            }
+        }
+
+        if($repeatedMethods) {
+            //TODO - Dar um jeito melhor de tratar os casos de redefinição de métodos
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function validateProperty(PHPProperty $newProperty) {
+        $repeatedProperties  = array();
+        foreach($this->properties as $property) {
+            if($newProperty->getName() === $property->getName()) {
+                $repeatedProperties[] = $property;
+            }
+        }
+
+        if($repeatedProperties) {
+            foreach($repeatedProperties as $repeatedProperty) {
+                if($repeatedProperty->getType()->getName() !== $newProperty->getType()->getName()) {
+                    throw new \Exception("Can not decide which property definition will be used, because these use different namespaces.");
+                }
+            }
+        } else {
+            return true;
+        }
+        return false;
+    }
 } 

@@ -69,6 +69,12 @@ PHP;
         }
     }
 
+    public function factoryStaticGetter() {
+        if($this->isStatic()) {
+            return new PHPMethod("static function get".ucfirst($this->name), new PHPBlock('return self::$'.$this->name.';'));
+        }
+    }
+
     public function factorySetter(PHPBlock $preMethod = null, PHPBlock $posMethod=null) {
 
         $preMethodString = '';
@@ -141,5 +147,9 @@ PHP;
 
     public function getName() {
         return $this->name;
+    }
+
+    public function isStatic() {
+        return $this->static;
     }
 } 

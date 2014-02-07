@@ -68,4 +68,8 @@ class Object implements PHPType{
     public function factoryTypeWithoutCollection() {
         return new Object($this->className, false);
     }
+
+    public function getName() {
+        return $this->className;
+    }
 } 

@@ -269,6 +269,7 @@ class TraverseXSD {
                 return $importTag;
             }
         }
+        return null;
     }
 
     private function getSchemaLocation($node) {
@@ -740,6 +741,7 @@ class TraverseXSD {
                         if($extension) {
                             //TODO - base representa o tipo herdado, porém pode ser um tipo primário também
                             $base = $extension->getAttribute("base");
+                            $extensionChildren = $extension->childNodes;
                             $complexTypeTag = self::getNode($extensionChildren,"complexType");
                             if($complexTypeTag) {
                                 $this->setParentClass($base, $class);
@@ -757,8 +759,9 @@ class TraverseXSD {
 
                     if ($attributeTags) {  //TODO - Tratar attribute
 
-                        $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata),true);
+                        $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata),true);
                         $class->addProperty($metaProperty);
+                        $class->addMethod($metaProperty->factoryStaticGetter());
                         $this->typedAttributesHandler($namespace, $attributeTags, $class);
 
 
@@ -1029,59 +1032,6 @@ class TraverseXSD {
         return $namespaceXsd === $this->defaultNamespaceXsd ? true : false;
     }
 
-    private static function getPrimariesDataTypes() {
-        return array(
-            "ENTITIES",//string type -> http://www.w3schools.com/schema/schema_dtypes_string.asp
-            "ENTITY",
-            "ID",
-            "IDREF",
-            "IDREFS",
-            "language",
-            "Name",
-            "NCName",
-            "NMTOKEN",
-            "NMTOKENS",
-            "normalizedString",
-            "QName",
-            "string",
-            "token",//end string
-
-            "date",//date type -> http://www.w3schools.com/schema/schema_dtypes_date.asp
-            "dateTime",
-            "duration",
-            "gDay",
-            "gMonth",
-            "gMonthDay",
-            "gYear",
-            "gYearMonth",
-            "time", //end date
-
-            "byte",//numeric type -> http://www.w3schools.com/schema/schema_dtypes_numeric.asp
-            "decimal",
-            "int",
-            "integer",
-            "long",
-            "negativeInteger",
-            "nonNegativeInteger",
-            "nonPositiveInteger",
-            "positiveInteger",
-            "short",
-            "unsignedLong",
-            "unsignedInt",
-            "unsignedShort",
-            "unsignedByte",// end numeric
-
-            "anyURI", //miscellaneous type -> http://www.w3schools.com/schema/schema_dtypes_misc.asp
-            "base64Binary",
-            "boolean",
-            "double",
-            "float",
-            "hexBinary",
-            "NOTATION",
-            "QName" // end miscellaneous
-        );
-    }
-
     /**
      * @param $namespace
      * @param $attributeTags
@@ -1139,6 +1089,7 @@ class TraverseXSD {
 
                 if($constant) {
                     $class->addConstant($constant);
+                    $class->addMethod($constant->factoryGetter());
                 } elseif($property) {
                     $class->addProperty($property);
                 } else {
@@ -1166,6 +1117,7 @@ class TraverseXSD {
     {
         $valueWithoutPrefix = self::removePrefix($refValue);
         $prefix = $this->getPrefixIfExists($refValue);
+        $matchElement = null;
         if ($prefix) {
             $namespaceXSD = $this->getNamespaceByPrefix($prefix);
             if ($namespaceXSD) {
@@ -1182,12 +1134,15 @@ class TraverseXSD {
                             break;
                         }
                     }
-
-                    $matchType = $matchElement->getAttribute("type");
-                    $refName = $matchElement->getAttribute("name");
-                    $namespaceRef = self::getNamespaceByTypeAttr($matchType);
-                    $refType = self::removePrefix($matchType);
-                    return array($refName, $namespaceRef, $refType);
+                    if($matchElement) {
+                        $matchType = $matchElement->getAttribute("type");
+                        $refName = $matchElement->getAttribute("name");
+                        $namespaceRef = self::getNamespaceByTypeAttr($matchType);
+                        $refType = self::removePrefix($matchType);
+                        return array($refName, $namespaceRef, $refType);
+                    } else {
+                        throw new \Exception("Referenced element was not found");
+                    }
                 }
                 //return array($refName, $namespaceRef, $refType);
             }
@@ -1224,9 +1179,10 @@ class TraverseXSD {
             //TODO - Pode existir outros indicator dentro desse indicator
             $elementsBuffer = array();
             $indicatorMetadata = array("_elements" => $this->getElements($indicatorTag, $elementsBuffer));
-            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($indicatorMetadata), true);
+            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($indicatorMetadata), true);
 
             $class->addProperty($metaProperty);
+            $class->addMethod($metaProperty->factoryStaticGetter());
 
             $this->addProperties($elementsBuffer, $class, $namespace);
         }
@@ -1245,8 +1201,9 @@ class TraverseXSD {
 
         if ($attributeTags) { //TODO - Tratar attribute
 
-            $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PUBLIC, new PHPValue($attributesMetadata), true);
+            $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata), true);
             $class->addProperty($metaProperty);
+            $class->addMethod($metaProperty->factoryStaticGetter());
             $this->typedAttributesHandler($namespace, $attributeTags, $class);
         }
     }

@@ -62,5 +62,9 @@ class Primary implements PHPType{
         return new Primary($this->type, false);
     }
 
+    public function getName() {
+        return $this->type;
+    }
+
 
 }
