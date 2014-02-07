@@ -298,12 +298,12 @@ PHP;
         $repeatedMethods  = array();
         foreach($this->methods as $method) {
             if($newMethod->getName() === $method->getName()) {
+
                 $repeatedMethods[] = $method;
             }
         }
 
         if($repeatedMethods) {
-            //TODO - Dar um jeito melhor de tratar os casos de redefinição de métodos
             return false;
         } else {
             return true;

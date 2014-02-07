@@ -135,9 +135,15 @@ class TraverseXSD {
 
     protected $rootNamespace;
 
-    function __construct($schema, $namespace, $fileName, $defaultNamespaceXsd = "http://www.w3.org/2001/XMLSchema") {
+    function __construct($schema, $namespace, $fileName, $defaultNamespaceXsd = "http://www.w3.org/2001/XMLSchema", $defaultGeneratedPath = "XsdParser\\Generated") {
         $this->defaultNamespaceXsd = $defaultNamespaceXsd;
-        $namespace = self::namespacefy($namespace);
+        $this->defaultGeneratedPath = $defaultGeneratedPath;
+        if($defaultGeneratedPath) {
+            $namespace = self::namespacefy($defaultGeneratedPath."\\".$namespace);
+        } else {
+            $namespace = self::namespacefy($namespace);
+        }
+
         $this->rootNamespace = $namespace;
         $this->fileName = $fileName;
         $schemaChildren = $schema->childNodes;
@@ -378,7 +384,7 @@ class TraverseXSD {
     {
         $fullPath = "{$namespace}\\";
         $class->setNamespace(new PHPNamespace($namespace));
-        $fullPath = str_replace("\\", DIRECTORY_SEPARATOR, $fullPath);
+        $fullPath = str_replace("\\", DIRECTORY_SEPARATOR, "..\\".$fullPath);
         mkdir($fullPath, 0777, true);
         $arqName = self::classfy($className). ".php";
 
@@ -400,7 +406,7 @@ class TraverseXSD {
         return "";
     }
 
-    private static function restrictionToValidationMethod($elementRestrictions) {
+    private static function restrictionToValidationMethod($elementRestrictions, $parentClass = false) {
 
         /**
         enumeration	        -   Defines a list of acceptable values
@@ -572,7 +578,11 @@ class TraverseXSD {
 
         $methods["validate"] = array();
         $methods["validate"]["visibility"] = "public";
-        $methods["validate"]["code"]= $validateMethod;
+        if($parentClass) {
+            $methods["validate"]["code"]= "parent::validate();\n".$validateMethod;
+        } else {
+            $methods["validate"]["code"]= $validateMethod;
+        }
         return $methods;
 
     }
@@ -813,9 +823,7 @@ class TraverseXSD {
 
                         $simpleTypeChildren = $simpleTypeTag->childNodes;
                         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
-                        $restrictions = self::getRestrictions($restrictionTag);
-                        $doc = self::restrictionsToDoc($restrictions);
-                        $class->addProperty(new PHPProperty("value", new Primary(Primary::TYPE_STRING), null, null, false, $doc));
+                        self::restrictionHandler($restrictionTag, $class);
                     }
 
                     if ($uniqueTag) {
@@ -981,7 +989,7 @@ class TraverseXSD {
             $schemaLocation = $this->getSchemaLocationByTypeAttr($stringType);
             if ($schemaLocation) {
                 $typedNamespace = self::namespacefy($schemaLocation);
-                return $typedNamespace;
+                return $this->defaultGeneratedPath."\\".$typedNamespace;
             } else {
                 //TODO -IMPORTANTE!!! - Implementar o jeito de pegar o tipo dos atributos buscando em ownerClass ou includeClass
                 $propertyType = $stringType;
@@ -1214,6 +1222,7 @@ class TraverseXSD {
      */
     private function restrictionHandler($restrictionTag, $class)
     {
+        $base = $restrictionTag->getAttribute("base");
         $restrictions = self::getRestrictions($restrictionTag);
         $doc = self::restrictionsToDoc($restrictions);
         $validationMethods = self::restrictionToValidationMethod($restrictions);
@@ -1225,8 +1234,13 @@ class TraverseXSD {
         $class->addProperty($property);
         $class->addMethod($property->factoryGetter());
         $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
-
-        $class->addMethod($class->factoryConstructor(null, new PHPBlock("\$this->validate();")));
+        if($base) {
+            $this->setParentClass($base, $class);
+            $preMethod = new PHPBlock("parent::__construct(\$_value);");
+        } else {
+            $preMethod = null;
+        }
+        $class->addMethod($class->factoryConstructor($preMethod, new PHPBlock("\$this->validate();")));
         //return array($restrictions, $doc, $validationMethods, $key, $validationMethod, $visibility, $property);
     }
 

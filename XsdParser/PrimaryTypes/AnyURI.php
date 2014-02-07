@@ -3,8 +3,9 @@
 
 namespace XsdParser\PrimaryTypes;
 
+//TODO - Validar URI
+class AnyURI {
 
-class String {
     protected $_value;
 
     public function __construct($value) {
@@ -20,5 +21,4 @@ class String {
     }
 
     public function validate() {}
-
 } 
