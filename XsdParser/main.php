@@ -53,10 +53,10 @@ const DOMDOCUMENTFRAGMENT = 11;
 const DOMNOTATION = 12;
 
 
-
-$document = new DOMDocument();
+$file_path = __DIR__.DIRECTORY_SEPARATOR."Sources".DIRECTORY_SEPARATOR;
 $fileName = "leiauteNFe_v3.10.xsd";
-$document->loadXML(file_get_contents($fileName));
+$document = new DOMDocument();
+$document->loadXML(file_get_contents($file_path.$fileName));
 
 $traverseXSD = new TraverseXSD($document->documentElement, $fileName, $fileName);
 
@@ -77,6 +77,8 @@ class TraverseXSD {
     protected $documents = array();
 
     protected  $defaultNamespaceXsd;
+
+    protected  $defaultFilePath;
 
     protected static $primary_types = array(
         "ENTITIES",//string type -> http://www.w3schools.com/schema/schema_dtypes_string.asp
@@ -138,6 +140,7 @@ class TraverseXSD {
     function __construct($schema, $namespace, $fileName, $defaultNamespaceXsd = "http://www.w3.org/2001/XMLSchema", $defaultGeneratedPath = "XsdParser\\Generated") {
         $this->defaultNamespaceXsd = $defaultNamespaceXsd;
         $this->defaultGeneratedPath = $defaultGeneratedPath;
+        $this->defaultFilePath =  __DIR__.DIRECTORY_SEPARATOR."Sources".DIRECTORY_SEPARATOR;
         if($defaultGeneratedPath) {
             $namespace = self::namespacefy($defaultGeneratedPath."\\".$namespace);
         } else {
@@ -191,7 +194,7 @@ class TraverseXSD {
         $attributes = self::getAttributesNames($includeOrImportTags->attributes);
         $fileName = $attributes["schemaLocation"];
         $domDocument = new DOMDocument();
-        $domDocument->loadXML(file_get_contents($fileName));
+        $domDocument->loadXML(file_get_contents($this->defaultFilePath.$fileName));
         if(!$namespace) {
             $namespace = self::namespacefy($fileName);
         }
@@ -1133,7 +1136,7 @@ class TraverseXSD {
                 if ($importTag) {
                     $schemaLocation = $this->getSchemaLocation($importTag);
                     $document = new DOMDocument();
-                    $document->loadXML(file_get_contents($schemaLocation));
+                    $document->loadXML(file_get_contents($this->defaultFilePath.$schemaLocation));
                     $elementsList = $document->getElementsByTagName("element");
                     for ($i = 0; $i < $elementsList->length; $i++) {
                         $element = $elementsList->item($i);
