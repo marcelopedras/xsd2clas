@@ -1,8 +1,8 @@
 <?php
 $ds = DIRECTORY_SEPARATOR;
 
-require __DIR__."/../../Util/SplClassLoader.php";
-$primaryTypes = realpath(__DIR__."../../");
+require __DIR__."{$ds}..{$ds}..{$ds}Util{$ds}SplClassLoader.php";
+$xsdParser = realpath(__DIR__."../../../");
 
 
 function registerNamespace($namespace, $path) {
@@ -10,5 +10,5 @@ function registerNamespace($namespace, $path) {
     $loader->register();
 }
 
-registerNamespace('PrimaryTypes', $primaryTypes);
+registerNamespace('XsdParser', $xsdParser);
 

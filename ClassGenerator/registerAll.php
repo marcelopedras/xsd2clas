@@ -11,3 +11,4 @@ require "PHPProperty.php";
 require "PHPBlock.php";
 require "PHPMethod.php";
 require "PHPClass.php";
+require "PHPUtil.php";

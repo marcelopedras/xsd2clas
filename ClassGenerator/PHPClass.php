@@ -1,7 +1,7 @@
 <?php
 namespace XSD2Class\GlassGenerator;
 
-class PHPClass implements PHPCode {
+class PHPClass extends PHPUtil implements PHPCode {
 
     const TYPE_INTERFACE = 'interface';
     const TYPE_CLASS     = 'class';
@@ -29,7 +29,7 @@ class PHPClass implements PHPCode {
     protected $doc;
 
     public function __construct($name, PHPClass $parentClass = null, PHPNamespace $namespace = null, $type = null, $doc = "") {
-        $this->name               = $name;
+        $this->name               = self::classfy($name);
         $this->parentClass        = $parentClass;
         $this->namespace          = $namespace;
         $this->type               = $type ?: self::TYPE_CLASS;
@@ -241,7 +241,7 @@ PHP;
             }
         }
 
-        return new PHPMethod("function __construct", new PHPBlock($preMethodString.$bodyMethod.$posMethodString), $parameterArray);
+        return new PHPMethod("__construct", new PHPBlock($preMethodString.$bodyMethod.$posMethodString), $parameterArray);
     }
 
     public function setParentClass(PHPClass $class) {
@@ -328,5 +328,9 @@ PHP;
             return true;
         }
         return false;
+    }
+
+    private static function classfy($className) {
+        return ucfirst(self::camelize($className));
     }
 } 

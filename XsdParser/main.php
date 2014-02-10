@@ -54,7 +54,10 @@ const DOMNOTATION = 12;
 
 
 $file_path = __DIR__.DIRECTORY_SEPARATOR."Sources".DIRECTORY_SEPARATOR;
-$fileName = "leiauteNFe_v3.10.xsd";
+//$fileName = "leiauteNFe_v3.10.xsd";
+//$fileName = "lote_gnre_v1.00.xsd";
+//$fileName = "teste.xsd";
+$fileName = "lote_gnre_v1.00.xsd";
 $document = new DOMDocument();
 $document->loadXML(file_get_contents($file_path.$fileName));
 
@@ -255,7 +258,7 @@ class TraverseXSD {
     }
 
     private static function classfy($string) {
-        return ucfirst(self::removePrefix($string));
+        return ucfirst(self::camelize(self::removePrefix($string)));
         //return str_replace(":","", ucfirst($string));
     }
 
@@ -264,7 +267,33 @@ class TraverseXSD {
      * @return string
      */
     private static function namespacefy($fileName) {
-        return ucfirst(str_replace(array(".xsd", ".", "-", "_", ":"), "", $fileName));
+        return ucfirst(str_replace(array(".xsd", ".", ":"), "", self::camelize($fileName)));
+    }
+
+    public static function camelize($string) {
+        $parts = preg_split('/\s/', $string);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        $parts = preg_split('/-/', $buffer);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        return $buffer;
+    }
+
+    private static function methodfy($string) {
+        return str_replace("-", "_", $string);
+    }
+
+    private static function propertyfy($string) {
+        return str_replace("-", "_", $string);
     }
 
     private function getNamespaceByPrefix($prefix) {
@@ -311,7 +340,7 @@ class TraverseXSD {
             $collection = ($minMaxOccurence["minOccurs"] || $minMaxOccurence["maxOccurs"]);
             if ($type) {
                 if($this->isPrimaryType($type->value)) {
-                    $property = $this->factoryPrimaryTypeProperty($type->value, $name->value);
+                    $property = $this->factoryPrimaryTypeProperty($type->value, $name->value, $collection);
                 } else {
                     $typedNamespace = $this->getNamespaceByTypeAttr($stringType);
                     //$classAttributeElement define o tipo externamente em uma tag complexType ou simpleType
@@ -541,10 +570,10 @@ class TraverseXSD {
                     $methods["totalDigits"] = array();
                     $methods["totalDigits"]["visibility"] = "protected";
                     $methods["totalDigits"]["code"] =
-                        "if(is_numeric(\$this->value)) {
+                        "if(is_numeric(\$this->_value)) {
                             if(strpos(\$this->value, '.') === false) {
                                 if(\$this->_value >= 0) {
-                                    if(strlen(\$this->value) == {$totalDigits} ) {
+                                    if(strlen(\$this->_value) == {$totalDigits} ) {
                                         return;
                                     }
                                 }
@@ -1117,6 +1146,11 @@ class TraverseXSD {
      */
     private function factoryMaxOccursValidationBlock($property, $maxOccurs)
     {
+        if($maxOccurs === "unbounded") {
+            $maxOccurs = INF;
+        } elseif(!$maxOccurs) {
+            $maxOccurs = 1;
+        }
         return new PHPBlock("if(count(\$this->{$property->getName()}) > {$maxOccurs}){throw new \\Exception(\"Property value out of bounds of max {$maxOccurs}\");}");
     }
 
@@ -1231,7 +1265,7 @@ class TraverseXSD {
         $validationMethods = self::restrictionToValidationMethod($restrictions);
         foreach ($validationMethods as $key => $validationMethod) {
             $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
-            $class->addMethod(new PHPMethod("function " . $key, new PHPBlock($validationMethod["code"]), array(), $visibility));
+            $class->addMethod(new PHPMethod($key, new PHPBlock($validationMethod["code"]), array(), $visibility));
         }
         $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
         $class->addProperty($property);
@@ -1263,19 +1297,6 @@ class TraverseXSD {
         $class = new PHPClass($className, null, new PHPNamespace($namespace), null, $doc);
         $simpleTypeChildren = $simpleType->childNodes;
         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
-
-        /*$restrictions = self::getRestrictions($restrictionTag);
-        $doc = self::restrictionsToDoc($restrictions);
-        $validationMethods = self::restrictionToValidationMethod($restrictions);
-        foreach ($validationMethods as $key => $validationMethod) {
-            $visibility = $validationMethod["visibility"] === "public" ? PHPMethod::VISIBILITY_PUBLIC : PHPMethod::VISIBILITY_PROTECTED;
-            $class->addMethod(new PHPMethod("function " . $key, new PHPBlock($validationMethod["code"]), array(), $visibility));
-        }
-        $property = new PHPProperty("_value", new Primary(Primary::TYPE_STRING), null, null, false, $doc);
-        $class->addProperty($property);
-        $class->addMethod($property->factoryGetter());
-        $class->addMethod($property->factorySetter(null, new PHPBlock("\$this->validate();")));
-        $class->addMethod($class->factoryConstructor(null, new PHPBlock("\$this->validate();")));*/
         $this->restrictionHandler($restrictionTag, $class);
         return array($className, $class);
     }
@@ -1286,11 +1307,11 @@ class TraverseXSD {
      * @return PHPProperty - Se o tipo é de fato primário, retorna a PHPProperty apropriada, senão lança uma exceção
      * @throws Exception - Lança uma exceção se o tipo não for primário
      */
-    private function factoryPrimaryTypeProperty($type, $name)
+    private function factoryPrimaryTypeProperty($type, $name, $isCollection)
     {
         if($this->isPrimaryType($type)) {
             $primaryClassName = self::classfy($type);
-            $property = new PHPProperty($name, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" . $primaryClassName));
+            $property = new PHPProperty($name, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" . $primaryClassName,$isCollection));
             return $property;
         }
 

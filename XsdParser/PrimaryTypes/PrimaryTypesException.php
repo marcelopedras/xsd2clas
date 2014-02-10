@@ -17,6 +17,10 @@ class PrimaryTypesException extends \Exception{
         return new self("Value '{$value}' format is invalid. Expected a pattern without {$format}.");
     }
 
+    public static function invalidIntFormat($value) {
+        return new self("Value '{$value}' is not an int");
+    }
+
 
 
 } 

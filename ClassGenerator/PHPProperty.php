@@ -1,9 +1,8 @@
 <?php
 namespace XSD2Class\GlassGenerator;
 
-use XSD2Class\GlassGenerator\Type\Primary;
-
-class PHPProperty implements PHPCode {
+require "PHPUtil.php";
+class PHPProperty extends PHPUtil implements PHPCode {
 
     const VISIBILITY_PRIVATE   = 'private';
     const VISIBILITY_PROTECTED = 'protected';
@@ -26,7 +25,7 @@ class PHPProperty implements PHPCode {
     protected $doc;
 
     public function __construct($name, PHPType $type = null, $visibility = null, PHPValue $default = null, $static = false, $doc = "") {
-        $this->name         = $name;
+        $this->name         = self::propertyfy($name);
         $this->type         = $type; //?: new PHPTypeMixed();
         $this->visibility   = $visibility ?: self::VISIBILITY_PROTECTED;
         $this->defaultValue = $default;
@@ -61,17 +60,17 @@ PHP;
 
     public function factoryGetter() {
         if($this->type->isCollection()) {
-            return new PHPMethod("function get".ucfirst($this->name), new PHPBlock(
+            return new PHPMethod("get".ucfirst($this->name), new PHPBlock(
                     "return \$this->{$this->name}[\$index];"
                 ), array(new PHPParameter("index")));
         } else {
-            return new PHPMethod("function get".ucfirst($this->name), new PHPBlock('return $this->'.$this->name.';'));
+            return new PHPMethod("get".ucfirst($this->name), new PHPBlock('return $this->'.$this->name.';'));
         }
     }
 
     public function factoryStaticGetter() {
         if($this->isStatic()) {
-            return new PHPMethod("static function get".ucfirst($this->name), new PHPBlock('return self::$'.$this->name.';'));
+            return new PHPMethod("get".ucfirst($this->name), new PHPBlock('return self::$'.$this->name.';'), array(), PHPProperty::VISIBILITY_PUBLIC, true);
         }
     }
 
@@ -89,14 +88,14 @@ PHP;
 
         if($this->type->isCollection()) {
             return new PHPMethod(
-                "function set".ucfirst($this->name),
+                "set".ucfirst($this->name),
                 new PHPBlock($preMethodString.'$this->'.$this->name.'[$index] = $'.$this->name.';'.$posMethodString),
-                array(new PHPParameter("index"),new PHPParameter($this->name, $this->type->factoryTypeWithoutCollection())));
+                array(new PHPParameter("index"),new PHPParameter($this->name, $this->type->factoryTypeWithoutCollection())),PHPProperty::VISIBILITY_PUBLIC);
         } else {
             return new PHPMethod(
-                "function set".ucfirst($this->name),
+                "set".ucfirst($this->name),
                 new PHPBlock($preMethodString.'$this->'.$this->name.' = $'.$this->name.';'.$posMethodString),
-                array(new PHPParameter($this->name, $this->type)));
+                array(new PHPParameter($this->name, $this->type)),PHPProperty::VISIBILITY_PUBLIC);
         }
     }
 
@@ -115,7 +114,7 @@ PHP;
         }
 
         return new PHPMethod(
-            "function add".ucfirst($this->name),
+            "add".ucfirst($this->name),
             new PHPBlock($preMethodString.'$this->'.$this->name.'[] = $'.$this->name.';'.$posMethodString),
             array(new PHPParameter($this->name,$this->type->factoryTypeWithoutCollection())));
     }
@@ -125,8 +124,8 @@ PHP;
             throw new \Exception("This not is a collection, measurer can not be fabricate");
         }
         return new PHPMethod(
-            "function ".$this->name."Length",
-            new PHPBlock('return count($this->'.$this->name.');'));
+            $this->name."Length",
+            new PHPBlock('return count($this->'.$this->name.');'),array(), PHPProperty::VISIBILITY_PUBLIC);
     }
 
     public function factorySetBlockAssign() {
@@ -151,5 +150,9 @@ PHP;
 
     public function isStatic() {
         return $this->static;
+    }
+
+    private static function propertyfy($propertyName) {
+        return lcfirst(self::camelize($propertyName));
     }
 } 

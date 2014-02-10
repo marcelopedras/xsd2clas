@@ -1,7 +1,7 @@
 <?php
 namespace XSD2Class\GlassGenerator;
 
-class PHPMethod implements PHPCode{
+class PHPMethod extends PHPUtil implements PHPCode{
 
     const VISIBILITY_PRIVATE   = 'private';
     const VISIBILITY_PROTECTED = 'protected';
@@ -22,7 +22,7 @@ class PHPMethod implements PHPCode{
     protected $body;
 
     public function __construct($name, $body, $parameters = array(), $visibility = self::VISIBILITY_PUBLIC, $static = false) {
-        $this->name = $name;
+        $this->name = $name === "__construct" ? $name: self::methodfy($name);
         $this->body = $body;
         $this->parameters = $parameters;
         $this->static = $static;
@@ -47,12 +47,16 @@ class PHPMethod implements PHPCode{
      */
     public function asPHP() {
         //Join in class and
-        return "{$this->visibility}{$this->getStaticCode()} {$this->name}({$this->getParametersCode()}) {
+        return "{$this->visibility}{$this->getStaticCode()} function {$this->name}({$this->getParametersCode()}) {
         {$this->getBodyCode()}
     }";
     }
 
     public function getName() {
         return $this->name;
+    }
+
+    private static function methodfy($methodName) {
+        return lcfirst(self::camelize($methodName));
     }
 }
