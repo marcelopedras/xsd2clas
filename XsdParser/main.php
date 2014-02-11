@@ -270,7 +270,15 @@ class TraverseXSD {
         return ucfirst(str_replace(array(".xsd", ".", ":"), "", self::camelize($fileName)));
     }
 
-    public static function camelize($string) {
+    public function camelize($string) {
+        $match = preg_match("/^_+/",$string, $matches);
+        if($match) {
+            $underline = $matches[0];
+            $string = str_replace($underline, "", $string);
+        } else {
+            $underline = "";
+        }
+
         $parts = preg_split('/\s/', $string);
 
         $buffer = "";
@@ -278,14 +286,14 @@ class TraverseXSD {
             $buffer = $buffer . ucfirst($part);
         }
 
-        $parts = preg_split('/-/', $buffer);
+        $parts = preg_split('/-|_/', $buffer);
 
         $buffer = "";
         foreach($parts as $part) {
             $buffer = $buffer . ucfirst($part);
         }
 
-        return $buffer;
+        return $underline.$buffer;
     }
 
     private static function methodfy($string) {

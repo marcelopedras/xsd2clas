@@ -10,9 +10,10 @@ namespace XSD2Class\GlassGenerator;
 
 
 class PHPUtil {
-    public static function camelize($string) {
+    public function camelize($string) {
 
-        if($string)
+
+
         $parts = preg_split('/\s/', $string);
 
         $buffer = "";
@@ -28,6 +29,33 @@ class PHPUtil {
         }
 
         return $buffer;
+    }
+
+    public function propertyfy($string) {
+        $underline = preserveUnderlineIfExists($string);
+        $string = $this->camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    public function methodfy($string) {
+        $underline = preserveUnderlineIfExists($string);
+        $string = $this->camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    public function classfy($string) {
+        return $this->camelize($string);
+    }
+
+    private function preserveUnderlineIfExists($string) {
+        $match = preg_match("/^_+/",$string, $matches);
+        if($match) {
+            $underline = $matches[0];
+            $string = str_replace($underline, "", $string);
+        } else {
+            $underline = "";
+        }
+        return $underline;
     }
 
 } 

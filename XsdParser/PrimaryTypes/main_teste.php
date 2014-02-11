@@ -10,11 +10,19 @@ require "autoloader.php";
 
 //use PrimaryTypes\Name;
 
-camelize("Mar - ce_lo e -Bra__uli o-Pedras");
+camelize("____Mar - ce_lo e -Bra__uli o-Pedras");
 
 
 
 function camelize($string) {
+    $match = preg_match("/^_+/",$string, $matches);
+    if($match) {
+        $underline = $matches[0];
+        $string = str_replace($underline, "", $string);
+    } else {
+        $underline = "";
+    }
+
     $parts = preg_split('/\s/', $string);
 
     $buffer = "";
@@ -29,7 +37,7 @@ function camelize($string) {
         $buffer = $buffer . ucfirst($part);
     }
 
-    return $buffer;
+    return $underline.$buffer;
 }
 
 
