@@ -32,13 +32,13 @@ class PHPUtil {
     }
 
     public function propertyfy($string) {
-        $underline = preserveUnderlineIfExists($string);
+        $underline = $this->preserveUnderlineIfExists($string);
         $string = $this->camelize($string);
         return $underline.lcfirst($string);
     }
 
     public function methodfy($string) {
-        $underline = preserveUnderlineIfExists($string);
+        $underline = $this->preserveUnderlineIfExists($string);
         $string = $this->camelize($string);
         return $underline.lcfirst($string);
     }

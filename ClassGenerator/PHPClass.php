@@ -29,7 +29,7 @@ class PHPClass extends PHPUtil implements PHPCode {
     protected $doc;
 
     public function __construct($name, PHPClass $parentClass = null, PHPNamespace $namespace = null, $type = null, $doc = "") {
-        $this->name               = self::classfy($name);
+        $this->name               = $this->classfy($name);
         $this->parentClass        = $parentClass;
         $this->namespace          = $namespace;
         $this->type               = $type ?: self::TYPE_CLASS;
@@ -328,9 +328,5 @@ PHP;
             return true;
         }
         return false;
-    }
-
-    private static function classfy($className) {
-        return ucfirst(self::camelize($className));
     }
 } 

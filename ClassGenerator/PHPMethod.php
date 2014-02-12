@@ -22,7 +22,7 @@ class PHPMethod extends PHPUtil implements PHPCode{
     protected $body;
 
     public function __construct($name, $body, $parameters = array(), $visibility = self::VISIBILITY_PUBLIC, $static = false) {
-        $this->name = $name === "__construct" ? $name: self::methodfy($name);
+        $this->name = $name === "__construct" ? $name: $this->methodfy($name);
         $this->body = $body;
         $this->parameters = $parameters;
         $this->static = $static;
@@ -56,7 +56,4 @@ class PHPMethod extends PHPUtil implements PHPCode{
         return $this->name;
     }
 
-    private static function methodfy($methodName) {
-        return lcfirst(self::camelize($methodName));
-    }
 }

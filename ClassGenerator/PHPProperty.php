@@ -25,7 +25,7 @@ class PHPProperty extends PHPUtil implements PHPCode {
     protected $doc;
 
     public function __construct($name, PHPType $type = null, $visibility = null, PHPValue $default = null, $static = false, $doc = "") {
-        $this->name         = self::propertyfy($name);
+        $this->name         = $this->propertyfy($name);
         $this->type         = $type; //?: new PHPTypeMixed();
         $this->visibility   = $visibility ?: self::VISIBILITY_PROTECTED;
         $this->defaultValue = $default;
@@ -150,9 +150,5 @@ PHP;
 
     public function isStatic() {
         return $this->static;
-    }
-
-    private static function propertyfy($propertyName) {
-        return lcfirst(self::camelize($propertyName));
     }
 } 
