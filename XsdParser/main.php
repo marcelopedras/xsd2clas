@@ -14,6 +14,7 @@ require "../ClassGenerator/PHPBlock.php";
 require "../ClassGenerator/PHPMethod.php";
 require "../ClassGenerator/PHPClass.php";
 
+
 use XSD2Class\GlassGenerator\PHPBlock;
 use XSD2Class\GlassGenerator\PHPClass;
 use XSD2Class\GlassGenerator\PHPConstant;
@@ -23,6 +24,7 @@ use XSD2Class\GlassGenerator\PHPNamespace;
 use XSD2Class\GlassGenerator\PHPProperty;
 use XSD2Class\GlassGenerator\Type\Primary;
 use XSD2Class\GlassGenerator\Type\Object;
+
 
 /**
 XML_ELEMENT_NODE (integer)          1	Node is a DOMElement
@@ -63,7 +65,7 @@ $document->loadXML(file_get_contents($file_path.$fileName));
 
 $traverseXSD = new TraverseXSD($document->documentElement, $fileName, $fileName);
 
-class TraverseXSD {
+class TraverseXSD{
 
     /**@var DOMElement*/
     protected $schema;
@@ -257,10 +259,10 @@ class TraverseXSD {
         return $buffer;
     }
 
-    private static function classfy($string) {
-        return ucfirst(self::camelize(self::removePrefix($string)));
-        //return str_replace(":","", ucfirst($string));
-    }
+//    private static function classfy($string) {
+//        return ucfirst(self::camelize(self::removePrefix($string)));
+//        //return str_replace(":","", ucfirst($string));
+//    }
 
     /**
      * @param $fileName
@@ -270,39 +272,39 @@ class TraverseXSD {
         return ucfirst(str_replace(array(".xsd", ".", ":"), "", self::camelize($fileName)));
     }
 
-    public function camelize($string) {
-        $match = preg_match("/^_+/",$string, $matches);
-        if($match) {
-            $underline = $matches[0];
-            $string = str_replace($underline, "", $string);
-        } else {
-            $underline = "";
-        }
+//    public function camelize($string) {
+//        $match = preg_match("/^_+/",$string, $matches);
+//        if($match) {
+//            $underline = $matches[0];
+//            $string = str_replace($underline, "", $string);
+//        } else {
+//            $underline = "";
+//        }
+//
+//        $parts = preg_split('/\s/', $string);
+//
+//        $buffer = "";
+//        foreach($parts as $part) {
+//            $buffer = $buffer . ucfirst($part);
+//        }
+//
+//        $parts = preg_split('/-|_/', $buffer);
+//
+//        $buffer = "";
+//        foreach($parts as $part) {
+//            $buffer = $buffer . ucfirst($part);
+//        }
+//
+//        return $underline.$buffer;
+//    }
 
-        $parts = preg_split('/\s/', $string);
-
-        $buffer = "";
-        foreach($parts as $part) {
-            $buffer = $buffer . ucfirst($part);
-        }
-
-        $parts = preg_split('/-|_/', $buffer);
-
-        $buffer = "";
-        foreach($parts as $part) {
-            $buffer = $buffer . ucfirst($part);
-        }
-
-        return $underline.$buffer;
-    }
-
-    private static function methodfy($string) {
-        return str_replace("-", "_", $string);
-    }
-
-    private static function propertyfy($string) {
-        return str_replace("-", "_", $string);
-    }
+//    private static function methodfy($string) {
+//        return str_replace("-", "_", $string);
+//    }
+//
+//    private static function propertyfy($string) {
+//        return str_replace("-", "_", $string);
+//    }
 
     private function getNamespaceByPrefix($prefix) {
         return $this->schema->getAttribute("xmlns:".$prefix);
@@ -420,8 +422,108 @@ class TraverseXSD {
      * @param $className
      * @param $class
      */
-    private static function createFile($namespace, $className, $class)
+    private static function createFile($namespace, $className, PHPClass $class)
     {
+        /*
+        public function toXml(&$xmlBuffer) {
+        $toXmlMethod = "toXml";
+        if($this->propertyExists("_indicatorMetadata")) {
+            $propertyValues = $this->getProperty("_indicatorMetadata");
+            $propertyValues = self::flatten_array($propertyValues);
+
+
+            foreach($propertyValues as $propertyValue) {
+                $method = self::methodfy("get_".$propertyValue);
+                $xmlBuffer = $xmlBuffer . "<{$propertyValue}>\n";
+                if($this->methodExists($this, $method)) {
+                    $nextChild = $this->$method();
+                    if($this->methodExists($nextChild, $toXmlMethod)) {
+                        $nextChild->$toXmlMethod($xmlBuffer);
+                    }
+                }
+                $xmlBuffer = $xmlBuffer . "</{$propertyValue}>\n";
+            }
+        }
+    }
+
+        public function propertyExists($propertyName) {
+        return property_exists(get_class($this),$propertyName);
+    }
+
+        public function getProperty($propertyName) {
+        return self::$$propertyName;
+    }
+
+        public function methodExists($object, $methodName) {
+        return method_exists(get_class($object), $methodName);
+    }
+
+        public static function camelize($string) {
+
+        $parts = preg_split('/\s/', $string);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        $parts = preg_split('/-|_/', $buffer);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        return $buffer;
+    }
+
+    private static function propertyfy($string) {
+        $underline = self::preserveUnderlineIfExists($string);
+        $string = self::camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    private static function methodfy($string) {
+        $underline = self::preserveUnderlineIfExists($string);
+        $string = self::camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    private static function classfy($string) {
+        return self::camelize($string);
+    }
+
+    private static  function preserveUnderlineIfExists($string) {
+        $match = preg_match("/^_+/",$string, $matches);
+        if($match) {
+            $underline = $matches[0];
+        } else {
+            $underline = "";
+        }
+        return $underline;
+    }
+
+    private static function flatten_array($array) {
+        $size=sizeof($array);
+        $keys=array_keys($array);
+        for($x = 0; $x < $size; $x++) {
+            $element = $array[$keys[$x]];
+
+            if(is_array($element)) {
+                $results = self::flatten_array($element);
+                $sr = sizeof($results);
+                $sk=array_keys($results);
+                for($y = 0; $y < $sr; $y++) {
+                    $flat_array[$sk[$y]] = $results[$sk[$y]];
+                }
+            } else {
+                $flat_array[$keys[$x]] = $element;
+            }
+        }
+
+        return $flat_array;
+    }*/
+        $class->addMethod(new PHPMethod("toXML",new PHPBlock("echo('teste');"),array(),PHPProperty::VISIBILITY_PUBLIC));
         $fullPath = "{$namespace}\\";
         $class->setNamespace(new PHPNamespace($namespace));
         $fullPath = str_replace("\\", DIRECTORY_SEPARATOR, "..\\".$fullPath);
@@ -823,7 +925,7 @@ class TraverseXSD {
                         $this->addProperties($classAttributesElements, $class, $namespace);
                     }
                     $class->addMethod($class->factoryConstructor());
-                    $this->ownerClass[$className] = $class;
+                    $this->ownerClass[self::classfy($className)] = $class;
                     //TODO - Ativar novamente
                     //echo("\n".$class->asPHP());
                     self::createFile($namespace, $className, $class);
@@ -875,7 +977,7 @@ class TraverseXSD {
                     }
 
                     $class->addMethod($class->factoryConstructor());
-                    $this->ownerClass[$className] = $class;
+                    $this->ownerClass[self::classfy($className)] = $class;
 
                     //TODO - Ativar novamente
                     //echo("\n" . $class->asPHP());
@@ -902,7 +1004,7 @@ class TraverseXSD {
                         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
 
                         $this->restrictionHandler($restrictionTag, $class);
-                        $this->ownerClass[$className] = $class;
+                        $this->ownerClass[self::classfy($className)] = $class;
 
                         //TODO - Ativar novamente
                         //echo("\n" . $class->asPHP());
@@ -1032,7 +1134,7 @@ class TraverseXSD {
                 return $this->defaultGeneratedPath."\\".$typedNamespace;
             } else {
                 //TODO -IMPORTANTE!!! - Implementar o jeito de pegar o tipo dos atributos buscando em ownerClass ou includeClass
-                $propertyType = $stringType;
+                $propertyType = self::classfy($stringType);
                 $typedNamespace = $this->rootNamespace; //$namespace;
                 foreach ($this->includeClass as $includedFile) {
                     foreach ($includedFile["ownerClass"] as $key => $includedClass) {
@@ -1342,6 +1444,51 @@ class TraverseXSD {
         }
         $class->setParentClass(new PHPClass($parentClass, null, new PHPNamespace($parentNamespace)));
         //TODO - Poderia lançar uma exceção no caso de um tipo inexistente??
+    }
+
+    public static function camelize($string) {
+
+        $parts = preg_split('/\s/', $string);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        $parts = preg_split('/-|_/', $buffer);
+
+        $buffer = "";
+        foreach($parts as $part) {
+            $buffer = $buffer . ucfirst($part);
+        }
+
+        return $buffer;
+    }
+
+    public static function propertyfy($string) {
+        $underline = self::preserveUnderlineIfExists(self::removePrefix($string));
+        $string = self::camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    public static function methodfy($string) {
+        $underline = self::preserveUnderlineIfExists(self::removePrefix($string));
+        $string = self::camelize($string);
+        return $underline.lcfirst($string);
+    }
+
+    public static function classfy($string) {
+        return self::camelize(self::removePrefix($string));
+    }
+
+    private static  function preserveUnderlineIfExists($string) {
+        $match = preg_match("/^_+/",$string, $matches);
+        if($match) {
+            $underline = $matches[0];
+        } else {
+            $underline = "";
+        }
+        return $underline;
     }
 }
 

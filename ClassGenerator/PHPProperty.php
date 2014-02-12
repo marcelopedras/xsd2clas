@@ -25,7 +25,7 @@ class PHPProperty extends PHPUtil implements PHPCode {
     protected $doc;
 
     public function __construct($name, PHPType $type = null, $visibility = null, PHPValue $default = null, $static = false, $doc = "") {
-        $this->name         = $this->propertyfy($name);
+        $this->name         = self::propertyfy($name);
         $this->type         = $type; //?: new PHPTypeMixed();
         $this->visibility   = $visibility ?: self::VISIBILITY_PROTECTED;
         $this->defaultValue = $default;
