@@ -424,106 +424,184 @@ class TraverseXSD{
      */
     private static function createFile($namespace, $className, PHPClass $class)
     {
-        /*
-        public function toXml(&$xmlBuffer) {
-        $toXmlMethod = "toXml";
-        if($this->propertyExists("_indicatorMetadata")) {
-            $propertyValues = $this->getProperty("_indicatorMetadata");
-            $propertyValues = self::flatten_array($propertyValues);
+        /*if(!$class->getParentClass()) {
+            $class->setParentClass(new PHPClass("XmlBuilder",null, new PHPNamespace("XsdParser\\Util")));
+        }*/
 
 
-            foreach($propertyValues as $propertyValue) {
-                $method = self::methodfy("get_".$propertyValue);
-                $xmlBuffer = $xmlBuffer . "<{$propertyValue}>\n";
-                if($this->methodExists($this, $method)) {
-                    $nextChild = $this->$method();
-                    if($this->methodExists($nextChild, $toXmlMethod)) {
-                        $nextChild->$toXmlMethod($xmlBuffer);
+
+
+        $toXml = new PHPMethod("toXml",
+            new PHPBlock(<<<PHP
+        \$toXmlMethod = "toXml";
+        if(\$this->propertyExists("_indicatorMetadata")) {
+            \$propertyValues = \$this->getProperty("_indicatorMetadata");
+            \$propertyValues = self::flattenArray(\$propertyValues);
+
+            foreach(\$propertyValues as \$propertyValue) {
+                if(is_array(\$this->\$propertyValue)) {
+                    foreach(\$this->\$propertyValue as \$position) {
+                        \$xmlBuffer = \$xmlBuffer . \$tabs."<{\$propertyValue}>\\n";
+                        \$position->toXml(\$xmlBuffer, \$tabs."\\t");
+                        \$xmlBuffer = \$xmlBuffer . \$tabs."</{\$propertyValue}>\\n";
                     }
+                } else {
+                    \$method = self::methodfy("get_".\$propertyValue);
+                    \$xmlBuffer = \$xmlBuffer . \$tabs."<{\$propertyValue}>\\n";
+                    if(\$this->methodExists(\$this, \$method)) {
+                        \$nextChild = \$this->\$method();
+                        if(\$nextChild) {
+                            if(!is_array(\$nextChild)) {
+                                if(\$this->methodExists(\$nextChild, \$toXmlMethod)) {
+                                    \$nextChild->\$toXmlMethod(\$xmlBuffer, \$tabs."\\t");
+                                }
+                            }
+                        }
+                    }
+                    \$xmlBuffer = \$xmlBuffer . \$tabs."</{\$propertyValue}>\\n";
                 }
-                $xmlBuffer = $xmlBuffer . "</{$propertyValue}>\n";
             }
-        }
-    }
-
-        public function propertyExists($propertyName) {
-        return property_exists(get_class($this),$propertyName);
-    }
-
-        public function getProperty($propertyName) {
-        return self::$$propertyName;
-    }
-
-        public function methodExists($object, $methodName) {
-        return method_exists(get_class($object), $methodName);
-    }
-
-        public static function camelize($string) {
-
-        $parts = preg_split('/\s/', $string);
-
-        $buffer = "";
-        foreach($parts as $part) {
-            $buffer = $buffer . ucfirst($part);
-        }
-
-        $parts = preg_split('/-|_/', $buffer);
-
-        $buffer = "";
-        foreach($parts as $part) {
-            $buffer = $buffer . ucfirst($part);
-        }
-
-        return $buffer;
-    }
-
-    private static function propertyfy($string) {
-        $underline = self::preserveUnderlineIfExists($string);
-        $string = self::camelize($string);
-        return $underline.lcfirst($string);
-    }
-
-    private static function methodfy($string) {
-        $underline = self::preserveUnderlineIfExists($string);
-        $string = self::camelize($string);
-        return $underline.lcfirst($string);
-    }
-
-    private static function classfy($string) {
-        return self::camelize($string);
-    }
-
-    private static  function preserveUnderlineIfExists($string) {
-        $match = preg_match("/^_+/",$string, $matches);
-        if($match) {
-            $underline = $matches[0];
         } else {
-            $underline = "";
-        }
-        return $underline;
-    }
-
-    private static function flatten_array($array) {
-        $size=sizeof($array);
-        $keys=array_keys($array);
-        for($x = 0; $x < $size; $x++) {
-            $element = $array[$keys[$x]];
-
-            if(is_array($element)) {
-                $results = self::flatten_array($element);
-                $sr = sizeof($results);
-                $sk=array_keys($results);
-                for($y = 0; $y < $sr; $y++) {
-                    $flat_array[$sk[$y]] = $results[$sk[$y]];
-                }
-            } else {
-                $flat_array[$keys[$x]] = $element;
+            if(\$this->propertyExists("_value")) {
+                \$xmlBuffer = \$xmlBuffer . \$tabs.\$this->_value."\\n";
             }
         }
 
-        return $flat_array;
-    }*/
-        $class->addMethod(new PHPMethod("toXML",new PHPBlock("echo('teste');"),array(),PHPProperty::VISIBILITY_PUBLIC));
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("xmlBuffer",null,null, true), new \XSD2Class\GlassGenerator\PHPParameter("tabs",new Primary(Primary::TYPE_STRING) ,new PHPValue(""))),
+            PHPProperty::VISIBILITY_PUBLIC);
+
+        $methodExists = new PHPMethod("methodExists",
+            new PHPBlock(<<<PHP
+        return method_exists(get_class(\$object), \$methodName);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("object"),new \XSD2Class\GlassGenerator\PHPParameter("methodName")),
+            PHPProperty::VISIBILITY_PUBLIC);
+
+        $getProperty = new PHPMethod("getProperty",
+            new PHPBlock(<<<PHP
+        return self::\$\$propertyName;
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("propertyName")),
+            PHPProperty::VISIBILITY_PUBLIC);
+
+        $propertyExists = new PHPMethod("propertyExists",
+            new PHPBlock(<<<PHP
+        return property_exists(get_class(\$this),\$propertyName);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("propertyName")),
+            PHPProperty::VISIBILITY_PUBLIC);
+
+        //method flatten_array
+        $flatternArray = new PHPMethod("flattenArray",
+            new PHPBlock(<<<PHP
+
+        \$objTmp = (object) array('aFlat' => array());
+
+        array_walk_recursive(\$array, create_function('&\$v, \$k, &\$t', '\$t->aFlat[] = \$v;'), \$objTmp);
+
+        return (\$objTmp->aFlat);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("array",new Primary(Primary::TYPE_ARRAY))),
+            PHPProperty::VISIBILITY_PUBLIC,true);
+
+        $preserveUnderlineIfExists = new PHPMethod("preserveUnderlineIfExists",
+            new PHPBlock(<<<PHP
+
+        \$match = preg_match("/^_+/",\$string, \$matches);
+        if(\$match) {
+            \$underline = \$matches[0];
+        } else {
+            \$underline = "";
+        }
+        return \$underline;
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
+            PHPProperty::VISIBILITY_PUBLIC, true);
+
+        $camelise = new PHPMethod("camelize",
+            new PHPBlock(<<<PHP
+
+        \$parts = preg_split('/\s/', \$string);
+
+        \$buffer = "";
+        foreach(\$parts as \$part) {
+            \$buffer = \$buffer . ucfirst(\$part);
+        }
+
+        \$parts = preg_split('/-|_/', \$buffer);
+
+        \$buffer = "";
+        foreach(\$parts as \$part) {
+            \$buffer = \$buffer . ucfirst(\$part);
+        }
+
+        return \$buffer;
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
+            PHPProperty::VISIBILITY_PUBLIC, true);
+
+        $propertyfy = new PHPMethod("propertyfy",
+            new PHPBlock(<<<PHP
+            \$underline = self::preserveUnderlineIfExists(\$string);
+            \$string = self::camelize(\$string);
+            return \$underline.lcfirst(\$string);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
+            PHPProperty::VISIBILITY_PUBLIC, true);
+
+        $methodfy = new PHPMethod("methodfy",
+            new PHPBlock(<<<PHP
+            \$underline = self::preserveUnderlineIfExists(\$string);
+            \$string = self::camelize(\$string);
+            return \$underline.lcfirst(\$string);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
+            PHPProperty::VISIBILITY_PUBLIC, true);
+
+        $classfy = new PHPMethod("classfy",
+            new PHPBlock(<<<PHP
+        return self::camelize(\$string);
+
+PHP
+            ),
+            array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
+            PHPProperty::VISIBILITY_PUBLIC);
+
+
+
+        $class->addMethod($flatternArray);
+        $class->addMethod($preserveUnderlineIfExists);
+        $class->addMethod($camelise);
+        $class->addMethod($propertyfy);
+        $class->addMethod($methodfy);
+        $class->addMethod($classfy);
+        $class->addMethod($propertyExists);
+        $class->addMethod($toXml);
+        $class->addMethod($methodExists);
+        $class->addMethod($getProperty);
+
+
+
+
         $fullPath = "{$namespace}\\";
         $class->setNamespace(new PHPNamespace($namespace));
         $fullPath = str_replace("\\", DIRECTORY_SEPARATOR, "..\\".$fullPath);

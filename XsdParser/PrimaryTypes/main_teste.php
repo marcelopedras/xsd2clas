@@ -88,7 +88,8 @@ class TestXml {
                         24 => 'c33_dataPagamento',
                         25 => 'c05_referencia',
                         26 => 'c39_camposExtras',
-                        27 => 'c42_identificadorGuia'
+                        27 => 'c42_identificadorGuia',
+                        28=> array(1,2,3,4, array(5,6,7))
     );
 
     public function getC01UfFavorecida() {
@@ -175,24 +176,12 @@ class TestXml {
     }
 
     private static function flatten_array($array) {
-        $size=sizeof($array);
-        $keys=array_keys($array);
-        for($x = 0; $x < $size; $x++) {
-            $element = $array[$keys[$x]];
 
-            if(is_array($element)) {
-                $results = self::flatten_array($element);
-                $sr = sizeof($results);
-                $sk=array_keys($results);
-                for($y = 0; $y < $sr; $y++) {
-                    $flat_array[$sk[$y]] = $results[$sk[$y]];
-                }
-            } else {
-                $flat_array[$keys[$x]] = $element;
-            }
-        }
+        $objTmp = (object) array('aFlat' => array());
 
-        return $flat_array;
+        array_walk_recursive($array, create_function('&$v, $k, &$t', '$t->aFlat[] = $v;'), $objTmp);
+
+        return ($objTmp->aFlat);
     }
 }
 

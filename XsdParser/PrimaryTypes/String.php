@@ -4,7 +4,7 @@
 namespace XsdParser\PrimaryTypes;
 
 
-class String {
+class String extends \XsdParser\Util\XmlBuilder {
     protected $_value;
 
     public function __construct($value) {
@@ -20,5 +20,9 @@ class String {
     }
 
     public function validate() {}
+
+    public function toXml(&$xmlBuffer, $tabs = "") {
+        $xmlBuffer = $xmlBuffer . $tabs .$this->_value."\n";
+    }
 
 } 
