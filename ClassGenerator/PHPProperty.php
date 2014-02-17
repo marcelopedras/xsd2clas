@@ -24,13 +24,14 @@ class PHPProperty extends PHPUtil implements PHPCode {
     /** @var string*/
     protected $doc;
 
-    public function __construct($name, PHPType $type = null, $visibility = null, PHPValue $default = null, $static = false, $doc = "") {
+    public function __construct($name, PHPType $type = null, $visibility = null, PHPValue $default = null, $static = false, $doc = "", $skipConstruct = false) {
         $this->name         = self::propertyfy($name);
         $this->type         = $type; //?: new PHPTypeMixed();
         $this->visibility   = $visibility ?: self::VISIBILITY_PROTECTED;
         $this->defaultValue = $default;
         $this->static       = $static;
         $this->doc          = $doc ? $doc." " : $doc;
+        $this->skipConstruct = $skipConstruct;
         }
 
     protected function getStaticCode() {
@@ -150,5 +151,9 @@ PHP;
 
     public function isStatic() {
         return $this->static;
+    }
+
+    public function isSkipConstruct() {
+        return $this->skipConstruct;
     }
 } 

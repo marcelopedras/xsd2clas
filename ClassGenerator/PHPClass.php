@@ -235,7 +235,7 @@ PHP;
         $bodyMethod = "";
         $parameterArray = array();
         foreach($this->properties as $property) {
-            if(!$property->isStatic()) {
+            if(!$property->isSkipConstruct()) {
                 $bodyMethod = $bodyMethod.$property->factorySetBlockAssign()->asPHP()."\n";
                 $parameterArray[] = $property->factoryParameter();
             }

@@ -27,8 +27,8 @@ class Int extends \XsdParser\Util\XmlBuilder {
         }
     }
 
-    public function toXml(&$xmlBuffer, $tabs="") {
+    /*public function toXml(&$xmlBuffer, $tabs="") {
         $xmlBuffer = $xmlBuffer . $tabs .$this->_value."\n";
-    }
+    }*/
 
 } 

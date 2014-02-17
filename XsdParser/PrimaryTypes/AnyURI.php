@@ -4,7 +4,7 @@
 namespace XsdParser\PrimaryTypes;
 
 //TODO - Validar URI
-class AnyURI {
+class AnyURI extends \XsdParser\Util\XmlBuilder {
 
     protected $_value;
 

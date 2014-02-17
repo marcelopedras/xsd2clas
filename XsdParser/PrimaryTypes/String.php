@@ -21,8 +21,8 @@ class String extends \XsdParser\Util\XmlBuilder {
 
     public function validate() {}
 
-    public function toXml(&$xmlBuffer, $tabs = "") {
+    /*public function toXml(&$xmlBuffer, $tabs = "") {
         $xmlBuffer = $xmlBuffer . $tabs .$this->_value."\n";
-    }
+    }*/
 
 } 

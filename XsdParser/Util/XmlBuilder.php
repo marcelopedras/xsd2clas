@@ -10,7 +10,7 @@ namespace  XsdParser\Util;
 
 
 class XmlBuilder {
-    public static function flattenArray(array  $array) {
+    public function flattenArray(array  $array) {
 
         $objTmp = (object) array('aFlat' => array());
 
@@ -19,7 +19,7 @@ class XmlBuilder {
         return ($objTmp->aFlat);
 
     }
-    public static function preserveUnderlineIfExists($string) {
+    public function preserveUnderlineIfExists($string) {
 
         $match = preg_match("/^_+/",$string, $matches);
         if($match) {
@@ -30,7 +30,7 @@ class XmlBuilder {
         return $underline;
 
     }
-    public static function camelize($string) {
+    public function camelize($string) {
 
         $parts = preg_split('/\s/', $string);
 
@@ -49,20 +49,20 @@ class XmlBuilder {
         return $buffer;
 
     }
-    public static function propertyfy($string) {
-        $underline = self::preserveUnderlineIfExists($string);
-        $string = self::camelize($string);
+    public function propertyfy($string) {
+        $underline = $this->preserveUnderlineIfExists($string);
+        $string = $this->camelize($string);
         return $underline.lcfirst($string);
 
     }
-    public static function methodfy($string) {
-        $underline = self::preserveUnderlineIfExists($string);
-        $string = self::camelize($string);
+    public function methodfy($string) {
+        $underline = $this->preserveUnderlineIfExists($string);
+        $string = $this->camelize($string);
         return $underline.lcfirst($string);
 
     }
     public function classfy($string) {
-        return self::camelize($string);
+        return $this->camelize($string);
 
     }
     public function propertyExists($propertyName) {
@@ -73,7 +73,12 @@ class XmlBuilder {
         $toXmlMethod = "toXml";
         if($this->propertyExists("_indicatorMetadata")) {
             $propertyValues = $this->getProperty("_indicatorMetadata");
-            $propertyValues = self::flattenArray($propertyValues);
+            $propertyValues = $this->flattenArray($propertyValues);
+
+            $tagName = $this->getProperty("_tagName");
+            $tabs2 =$tabs;
+            $tabs = $tabs . "\t";
+            $xmlBuffer = $xmlBuffer .$tabs2."<{$tagName}>\n";
 
             foreach($propertyValues as $propertyValue) {
                 if(is_array($this->$propertyValue)) {
@@ -83,7 +88,7 @@ class XmlBuilder {
                         $xmlBuffer = $xmlBuffer . $tabs."</{$propertyValue}>\n";
                     }
                 } else {
-                    $method = self::methodfy("get_".$propertyValue);
+                    $method = $this->methodfy("get_".$propertyValue);
                     $xmlBuffer = $xmlBuffer . $tabs."<{$propertyValue}>\n";
                     if($this->methodExists($this, $method)) {
                         $nextChild = $this->$method();
@@ -98,20 +103,20 @@ class XmlBuilder {
                     $xmlBuffer = $xmlBuffer . $tabs."</{$propertyValue}>\n";
                 }
             }
-        } else {
+            $xmlBuffer = $xmlBuffer .$tabs2."</{$tagName}>\n";
+        }
+        else {
             if($this->propertyExists("_value")) {
                 $xmlBuffer = $xmlBuffer . $tabs.$this->_value."\n";
             }
         }
-
-
     }
     public function methodExists($object, $methodName) {
         return method_exists(get_class($object), $methodName);
 
     }
     public function getProperty($propertyName) {
-        return self::$$propertyName;
+        return $this->$propertyName;
 
     }
 } 

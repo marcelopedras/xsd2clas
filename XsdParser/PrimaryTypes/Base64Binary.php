@@ -2,7 +2,7 @@
 
 namespace XsdParser\PrimaryTypes;
 
-class Base64Binary {
+class Base64Binary extends \XsdParser\Util\XmlBuilder {
 
 
     protected $_value;

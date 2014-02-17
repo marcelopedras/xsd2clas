@@ -3,7 +3,7 @@
 namespace XsdParser\PrimaryTypes;
 
 
-class NMTOKEN {
+class NMTOKEN extends \XsdParser\Util\XmlBuilder {
     protected $_value;
 
     public function __construct($value) {

@@ -334,8 +334,10 @@ class TraverseXSD{
      * @param $class
      * @param $namespace
      */
-    private function addProperties($classAttributesElements, PHPCLass $class, $namespace)
+    private function addProperties($classAttributesElements, PHPCLass $class, $namespace, &$validationBlock = null)
     {
+        $validateBlocks = array();
+        $collection = null;
         foreach ($classAttributesElements as $classAttributeElement) { //Atributos da classe
             $attrs = $classAttributeElement->attributes;
             $type = self::getAttribute($attrs, "type");
@@ -348,6 +350,11 @@ class TraverseXSD{
             $minMaxOccurence = self::getMinMaxOccursOfElement($classAttributeElement);
 
             $collection = ($minMaxOccurence["minOccurs"] || $minMaxOccurence["maxOccurs"]);
+            if($collection) {
+                $stringProperty = self::propertyfy($name->value);
+                $validateBlocks[] = "count(\$this->{$stringProperty}) > {$minMaxOccurence["maxOccurs"]}";
+            }
+
             if ($type) {
                 if($this->isPrimaryType($type->value)) {
                     $property = $this->factoryPrimaryTypeProperty($type->value, $name->value, $collection);
@@ -388,6 +395,14 @@ class TraverseXSD{
                 }
             }
         }
+
+        if($collection) {
+
+           /* $methodValidate = new PHPMethod("validate", new PHPBlock("if(".implode(" || ", $validateBlocks)."){throw new \\Exception(\"Property value out of bounds\");}"));
+            $class->addMethod($methodValidate);*/
+
+            $validationBlock = new PHPBlock("if(".implode(" || ", $validateBlocks)."){\nthrow new \\Exception(\"Property values out of bounds\");}");
+        }
     }
 
 
@@ -424,14 +439,11 @@ class TraverseXSD{
      */
     private static function createFile($namespace, $className, PHPClass $class)
     {
-        /*if(!$class->getParentClass()) {
+        if(!$class->getParentClass()) {
             $class->setParentClass(new PHPClass("XmlBuilder",null, new PHPNamespace("XsdParser\\Util")));
-        }*/
+        }
 
-
-
-
-        $toXml = new PHPMethod("toXml",
+        /*$toXml = new PHPMethod("toXml",
             new PHPBlock(<<<PHP
         \$toXmlMethod = "toXml";
         if(\$this->propertyExists("_indicatorMetadata")) {
@@ -584,20 +596,20 @@ PHP
 PHP
             ),
             array(new \XSD2Class\GlassGenerator\PHPParameter("string",new Primary(Primary::TYPE_STRING))),
-            PHPProperty::VISIBILITY_PUBLIC);
+            PHPProperty::VISIBILITY_PUBLIC);*/
 
 
 
-        $class->addMethod($flatternArray);
-        $class->addMethod($preserveUnderlineIfExists);
-        $class->addMethod($camelise);
-        $class->addMethod($propertyfy);
-        $class->addMethod($methodfy);
-        $class->addMethod($classfy);
-        $class->addMethod($propertyExists);
-        $class->addMethod($toXml);
-        $class->addMethod($methodExists);
-        $class->addMethod($getProperty);
+//        $class->addMethod($flatternArray);
+//        $class->addMethod($preserveUnderlineIfExists);
+//        $class->addMethod($camelise);
+//        $class->addMethod($propertyfy);
+//        $class->addMethod($methodfy);
+//        $class->addMethod($classfy);
+//        $class->addMethod($propertyExists);
+//        $class->addMethod($toXml);
+//        $class->addMethod($methodExists);
+//        $class->addMethod($getProperty);
 
 
 
@@ -925,6 +937,7 @@ PHP
 
 
                     $class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
+                    $class->addProperty(new PHPProperty("_tagName",new Primary(Primary::TYPE_STRING),PHPProperty::VISIBILITY_PROTECTED, new PHPValue($name->value),false, "", true));
                     //TODO - Changing namespace
                     //$namespace = $namespace . "\\" . $name->value;
 
@@ -975,7 +988,7 @@ PHP
                             $complexTypeTag = self::getNode($extensionChildren,"complexType");
                             if($complexTypeTag) {
                                 $this->setParentClass($base, $class);
-                                $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
+                                $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class, $lengthValidation);
                             }
                         }
 
@@ -989,9 +1002,10 @@ PHP
 
                     if ($attributeTags) {  //TODO - Tratar attribute
 
-                        $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata),true);
+                        $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata),false, "", true);
                         $class->addProperty($metaProperty);
-                        $class->addMethod($metaProperty->factoryStaticGetter());
+                        //$class->addMethod($metaProperty->factoryStaticGetter());
+                        $class->addMethod($metaProperty->factoryGetter());
                         $this->typedAttributesHandler($namespace, $attributeTags, $class);
 
 
@@ -1000,9 +1014,10 @@ PHP
                     if($indicatorTag) {
                         $childElements = $indicatorTag->childNodes;
                         $classAttributesElements = self::getNodes($childElements, "element");
-                        $this->addProperties($classAttributesElements, $class, $namespace);
+                        $this->addProperties($classAttributesElements, $class, $namespace, $lengthValidation);
                     }
-                    $class->addMethod($class->factoryConstructor());
+
+                    $class->addMethod($class->factoryConstructor(null,$lengthValidation));
                     $this->ownerClass[self::classfy($className)] = $class;
                     //TODO - Ativar novamente
                     //echo("\n".$class->asPHP());
@@ -1028,13 +1043,14 @@ PHP
 
 
                     $class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
+                    $class->addProperty(new PHPProperty("_tagName",new Primary(Primary::TYPE_STRING),PHPProperty::VISIBILITY_PROTECTED, new PHPValue($name->value),false, "", true));
                     //TODO - Changing namespace
                     $namespace = $namespace . "\\" . $className;
 
 
 
                     if ($complexTypeTag) {
-                        $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class);
+                        $this->internalComplexTypeHandler($namespace, $complexTypeTag, $class, $lengthValidation);
 
                     }
 
@@ -1054,7 +1070,7 @@ PHP
                         $class->addProperty(new PHPProperty($name->value, new Primary(Primary::TYPE_STRING), null, null, false, $doc));
                     }
 
-                    $class->addMethod($class->factoryConstructor());
+                    $class->addMethod($class->factoryConstructor(null, $lengthValidation));
                     $this->ownerClass[self::classfy($className)] = $class;
 
                     //TODO - Ativar novamente
@@ -1077,6 +1093,7 @@ PHP
                     if($name) {
                         $className = self::classfy($name->value);
                         $class = new PHPClass($className, null, new PHPNamespace($namespace), null, self::getDocumentation($node));
+                        $class->addProperty(new PHPProperty("_tagName",new Primary(Primary::TYPE_STRING),PHPProperty::VISIBILITY_PROTECTED, new PHPValue($name->value),false, "", true));
 
                         $simpleTypeChildren = $node->childNodes;
                         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
@@ -1390,7 +1407,7 @@ PHP
      * @param $complexTypeTag
      * @param $class
      */
-    private function internalComplexTypeHandler($namespace, $complexTypeTag, $class)
+    private function internalComplexTypeHandler($namespace, $complexTypeTag, $class, &$lengthValidation = null)
     {
         $complexTypeChildren = $complexTypeTag->childNodes;
         $sequenceTag = self::getNode($complexTypeChildren, "sequence");
@@ -1412,12 +1429,13 @@ PHP
             //TODO - Pode existir outros indicator dentro desse indicator
             $elementsBuffer = array();
             $indicatorMetadata = array("_elements" => $this->getElements($indicatorTag, $elementsBuffer));
-            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($indicatorMetadata), true);
+            $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($indicatorMetadata), false, "", true);
 
             $class->addProperty($metaProperty);
-            $class->addMethod($metaProperty->factoryStaticGetter());
+            //$class->addMethod($metaProperty->factoryStaticGetter());
+            $class->addMethod($metaProperty->factoryGetter());
 
-            $this->addProperties($elementsBuffer, $class, $namespace);
+            $this->addProperties($elementsBuffer, $class, $namespace, $lengthValidation);
         }
 
         if ($simpleContent) { //TODO - Tratar simpleContent
@@ -1434,9 +1452,10 @@ PHP
 
         if ($attributeTags) { //TODO - Tratar attribute
 
-            $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata), true);
+            $metaProperty = new PHPProperty("_attributeMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($attributesMetadata),false, "", true);
             $class->addProperty($metaProperty);
-            $class->addMethod($metaProperty->factoryStaticGetter());
+            //$class->addMethod($metaProperty->factoryStaticGetter());
+            $class->addMethod($metaProperty->factoryGetter());
             $this->typedAttributesHandler($namespace, $attributeTags, $class);
         }
     }
@@ -1483,6 +1502,7 @@ PHP
         $simpleType = self::getNode($nodeChildren, "simpleType");
         $className = self::classfy($name);
         $class = new PHPClass($className, null, new PHPNamespace($namespace), null, $doc);
+        $class->addProperty(new PHPProperty("_tagName",new Primary(Primary::TYPE_STRING),PHPProperty::VISIBILITY_PROTECTED, new PHPValue($name),false, "", true));
         $simpleTypeChildren = $simpleType->childNodes;
         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
         $this->restrictionHandler($restrictionTag, $class);
