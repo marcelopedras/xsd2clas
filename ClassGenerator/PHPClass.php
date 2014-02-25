@@ -252,48 +252,6 @@ PHP;
         return $this->parentClass;
     }
 
-    /*public function validateProperties() {
-        $propertiesName = array();
-        foreach($this->properties as $property) {
-            $propertiesName[] = $property->getName();
-        }
-        $uniqueValues = array_unique($propertiesName);
-        if(count($propertiesName)!==count($uniqueValues)) {
-            $diffs = array_diff_assoc($propertiesName,$uniqueValues);
-            $indexMatching = array();
-            foreach($diffs as $diff) {
-                $diffBuffer = array();
-                foreach($propertiesName as $key => $propertyName) {
-                    if($propertyName === $diff) {
-                        $diffBuffer[] = $key;
-                    }
-                }
-                $indexMatching[$diff] = $diffBuffer;
-            }
-
-            foreach($indexMatching as $match){
-
-                $namespaceOrTypeBuffer = array();
-                for($i = 0; $i< count($match); $i++) {
-                    $namespaceOrTypeBuffer[]=$this->properties[$match[$i]]->getType()->getName();
-                }
-                if(count($namespaceOrTypeBuffer)===count(array_unique($namespaceOrTypeBuffer))) {
-                    throw new \Exception("Existem propriedades do mesmo nome com tipos diferentes, impossível tratar isso");
-                }
-                //TODO -Se nao aconteceu uma excecao, deixar apenas uma property dos tipos repetidos
-                for($i = 1; $i< count($match); $i++) {
-                    unset($this->properties[$match[$i]]);
-                }
-
-                //TODO - Remover métodos duplicados também
-
-            }
-
-        }
-
-
-    }*/
-
     public function validateMethod(PHPMethod $newMethod) {
         $repeatedMethods  = array();
         foreach($this->methods as $method) {

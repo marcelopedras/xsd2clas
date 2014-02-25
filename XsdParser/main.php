@@ -56,10 +56,10 @@ const DOMNOTATION = 12;
 
 
 $file_path = __DIR__.DIRECTORY_SEPARATOR."Sources".DIRECTORY_SEPARATOR;
-//$fileName = "leiauteNFe_v3.10.xsd";
+$fileName = "leiauteNFe_v3.10.xsd";
 //$fileName = "lote_gnre_v1.00.xsd";
 //$fileName = "teste.xsd";
-$fileName = "lote_gnre_v1.00.xsd";
+//$fileName = "lote_gnre_v1.00.xsd";
 $document = new DOMDocument();
 $document->loadXML(file_get_contents($file_path.$fileName));
 
@@ -1007,11 +1007,17 @@ PHP
                         //$class->addMethod($metaProperty->factoryStaticGetter());
                         $class->addMethod($metaProperty->factoryGetter());
                         $this->typedAttributesHandler($namespace, $attributeTags, $class);
-
-
                     }
 
                     if($indicatorTag) {
+                        $elementsBuffer = array();
+                        $indicatorMetadata = array("_elements" => $this->getElements($indicatorTag, $elementsBuffer));
+                        $metaProperty = new PHPProperty("_indicatorMetadata", new Primary(Primary::TYPE_ARRAY), PHPProperty::VISIBILITY_PROTECTED, new PHPValue($indicatorMetadata), false, "", true);
+
+                        $class->addProperty($metaProperty);
+                        //$class->addMethod($metaProperty->factoryStaticGetter());
+                        $class->addMethod($metaProperty->factoryGetter());
+
                         $childElements = $indicatorTag->childNodes;
                         $classAttributesElements = self::getNodes($childElements, "element");
                         $this->addProperties($classAttributesElements, $class, $namespace, $lengthValidation);
@@ -1064,10 +1070,7 @@ PHP
 
                     if ($uniqueTag) {
                         //TODO - Tratar caso da tag unique
-                        $attributes = $uniqueTag->attributes;
-                        $name = self::getAttribute($attributes, "name");
-                        $doc = "unique";
-                        $class->addProperty(new PHPProperty($name->value, new Primary(Primary::TYPE_STRING), null, null, false, $doc));
+                        $this->uniqueTagHandler($uniqueTag, $class);
                     }
 
                     $class->addMethod($class->factoryConstructor(null, $lengthValidation));
@@ -1337,6 +1340,8 @@ PHP
                     $class->addMethod($constant->factoryGetter());
                 } elseif($property) {
                     $class->addProperty($property);
+                    $class->addMethod($property->factoryGetter());
+                    $class->addMethod($property->factorySetter());
                 } else {
                     throw new \Exception("Expected constant or property and given a null value");
                 }
@@ -1507,6 +1512,29 @@ PHP
         $restrictionTag = self::getNode($simpleTypeChildren, "restriction");
         $this->restrictionHandler($restrictionTag, $class);
         return array($className, $class);
+    }
+
+    private function uniqueTagHandler($uniqueTag, $class) {
+
+        $uniqueTagChildren = $uniqueTag->childNodes;
+
+        $name = self::getAttribute($uniqueTag->attributes, "name");
+        $doc = "This field must be unique";
+        $class->addProperty(new PHPProperty($name->value, new Object("\\" . self::PRIMARY_TYPE_NAMESPACE . "\\" ."ID"), null, null, false, $doc));
+
+        $selector = self::getNode($uniqueTagChildren, "selector")->getAttribute("xpath");
+        $fields = self::getNodes($uniqueTagChildren, "field");
+
+        foreach($fields as $field) {
+            $methodGetXpathField = new PHPMethod("getXpathField", new PHPBlock("return \"{$field->getAttribute("xpath")}\";"));
+            $class->addMethod($methodGetXpathField);
+        }
+
+        $methodGetXpathSelector = new PHPMethod("getXpathSelector", new PHPBlock("return \"{$selector}\";"));
+        $class->addMethod($methodGetXpathSelector);
+
+
+
     }
 
     /**
