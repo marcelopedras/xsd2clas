@@ -219,7 +219,7 @@ class TraverseWSDL {
         }
         return null;
     }
-    
+
     public function createType($type, $url) {
         $class = new PHPClass($type->getAttribute("name"));
 
